@@ -90,12 +90,31 @@ def root():
     }
 
 
+from .supabase_client import is_supabase_configured
+import os
+
 @app.get("/health")
 def health():
     return {
         "status": "healthy",
         "ml_model_loaded": ml_pipeline.model is not None,
-        "materials_count": len(PACKAGING_MATERIALS)
+        "materials_count": len(PACKAGING_MATERIALS),
+        "supabase_configured": is_supabase_configured()
+    }
+
+
+@app.get("/api/supabase/status")
+def supabase_status():
+    url = os.getenv("SUPABASE_URL", "")
+    anon = os.getenv("SUPABASE_ANON_KEY", "")
+    db_url = os.getenv("DATABASE_URL", "")
+    configured = is_supabase_configured()
+    return {
+        "configured": configured,
+        "supabase_url": url if configured else "(placeholder)",
+        "has_anon_key": bool(anon and "your-anon" not in anon),
+        "has_database_url": bool(db_url and "[YOUR-PASSWORD]" not in db_url),
+        "message": "Supabase connected and configured" if configured else "Supabase contains placeholder credentials in .env"
     }
 
 
