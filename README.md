@@ -26,6 +26,7 @@
 ## 📋 Table of Contents
 
 - [Executive Overview](#-executive-overview)
+- [📖 User Manual & Operating Guide (USER_MANUAL.md)](./USER_MANUAL.md)
 - [System Architecture](#-system-architecture)
 - [Key Features & Platform Modules](#-key-features--platform-modules)
 - [Role-Based Access Control (RBAC)](#-role-based-access-control-rbac)
