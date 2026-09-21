@@ -115,7 +115,7 @@ export function AnalysisHistory({ onSelectAnalysis, onDuplicateAnalysis, onDownl
           </div>
           <h1 className="page-title">My Analyses & Historical Reports</h1>
           <p className="page-desc">
-            Review past packaging recommendations, duplicate input parameters, or export verified ASTM compliance records.
+            Review past packaging recommendations, duplicate input parameters, or export verified compliance records.
           </p>
         </div>
 

@@ -22,11 +22,11 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
         <ShieldAlert size={48} style={{ color: "var(--error-red)", margin: "0 auto 16px" }} />
         <h2 style={{ color: "#fff", marginBottom: "8px" }}>Management Access Required</h2>
         <p style={{ color: "var(--text-secondary)", fontSize: "13.5px", marginBottom: "24px" }}>
-          The System Operations Portal is restricted to <b>🛠️ System Manager</b> and <b>👑 Super Admin</b> roles.
+          The System Operations Portal is restricted to <b>System Manager</b> and <b>Super Admin</b> roles.
         </p>
         <div style={{ display: "flex", justifyContent: "center", gap: "12px" }}>
           <button className="btn btn-primary" onClick={() => onQuickSwitch("system_manager")}>
-            Switch to 🛠️ System Manager Persona
+            Switch to System Manager Persona
           </button>
           <button className="btn btn-secondary" onClick={() => onNavigate("dashboard")}>
             Return to Dashboard
@@ -87,9 +87,9 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
           <div className="micro-label cyan" style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
             <Wrench size={12} /> Operational Administration
           </div>
-          <h1 className="page-title">🛠️ System Operations Portal</h1>
+          <h1 className="page-title">System Operations Portal</h1>
           <p className="page-desc">
-            Manage ASTM material specifications, food sorption databases, and calibrate default operational parameters.
+            Manage material specifications, food sorption databases, and calibrate default operational parameters.
           </p>
         </div>
 
@@ -98,7 +98,7 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
             Management Access Active
           </span>
           <button className="btn btn-secondary" style={{ fontSize: "12px", padding: "6px 12px" }} onClick={() => onQuickSwitch("super_admin")}>
-            👑 Elevate to Super Admin
+            Elevate to Super Admin
           </button>
         </div>
       </div>

@@ -41,8 +41,8 @@ export function Step4Analysis({ input = {}, onComplete, isBackendDone = false })
       id: "barrier",
       num: "04",
       title: "Barrier requirements",
-      badge: "ASTM PHYSICS",
-      sub: "Computing ASTM D3985 OTR and ASTM F1249 WVTR critical tolerance thresholds",
+      badge: "PHYSICS",
+      sub: "Computing OTR and WVTR critical tolerance thresholds",
       log: `[BARRIER] Derived maximum permissible OTR & WVTR critical mass limits`,
       icon: Zap
     },

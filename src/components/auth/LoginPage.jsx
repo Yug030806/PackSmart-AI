@@ -20,6 +20,17 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
     setTimeout(() => setSuccessMsg(null), 2500);
   };
 
+  const handleRoleSelect = (newRole) => {
+    setRole(newRole);
+    setError(null);
+    const demo = DEMO_ACCOUNTS.find(a => a.role === newRole);
+    if (demo) {
+      setEmail(demo.email);
+      setPassword(demo.password);
+      onQuickSwitch(demo.role);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -43,25 +54,22 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
 
       if (res && res.ok) {
         const data = await res.json();
-        onLogin(data.user, data.token);
         setSuccessMsg(`Welcome back, ${data.user.name}!`);
-
         setTimeout(() => {
-          if (data.user.role === "super_admin") nav("admin");
-          else if (data.user.role === "system_manager") nav("management");
-          else nav("dashboard");
-        }, 600);
+          onLogin(data.user, data.token);
+        }, 250);
       } else {
         throw new Error("Invalid credentials");
       }
     } catch {
       onQuickSwitch(role);
-      setSuccessMsg(`Signed in locally as ${role === "super_admin" ? " Super Admin" : role === "system_manager" ? " System Manager" : " User"}`);
+      const roleLabels = { super_admin: "Super Admin", system_manager: "System Manager", user: "Standard User" };
+      setSuccessMsg(`Signed in locally as ${roleLabels[role] || "User"}`);
       setTimeout(() => {
         if (role === "super_admin") nav("admin");
         else if (role === "system_manager") nav("management");
         else nav("dashboard");
-      }, 600);
+      }, 250);
     } finally {
       setLoading(false);
     }
@@ -161,7 +169,7 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
 
             <div className="field">
               <label>Role / Access Tier</label>
-              <select value={role} onChange={e => setRole(e.target.value)}>
+              <select value={role} onChange={e => handleRoleSelect(e.target.value)}>
                 <option value="super_admin"> Super Admin (Full System Access)</option>
                 <option value="system_manager"> System Manager (Management Access)</option>
                 <option value="user"> User (Basic Access)</option>
@@ -199,13 +207,13 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
               lineHeight: "1.45",
               textAlign: "center"
             }}>
-              <div style={{ color: "var(--warning-amber)", fontWeight: 700 }}>👑 SUPER ADMIN (Full Root Authority)</div>
+              <div style={{ color: "var(--warning-amber)", fontWeight: 700 }}>SUPER ADMIN (Full Root Authority)</div>
               <div style={{ color: "var(--text-muted)" }}>│</div>
               <div style={{ color: "var(--text-muted)" }}>▼</div>
-              <div style={{ color: "var(--accent-cyan)", fontWeight: 700 }}>🛠️ SYSTEM MANAGER (Management Tier)</div>
+              <div style={{ color: "var(--accent-cyan)", fontWeight: 700 }}>SYSTEM MANAGER (Management Tier)</div>
               <div style={{ color: "var(--text-muted)" }}>│</div>
               <div style={{ color: "var(--text-muted)" }}>▼</div>
-              <div style={{ color: "var(--accent-green)", fontWeight: 700 }}>👤 USER (Core Packaging Advisor & Reports)</div>
+              <div style={{ color: "var(--accent-green)", fontWeight: 700 }}>USER (Core Packaging Advisor & Reports)</div>
             </div>
 
             {/* Quick privileges breakdown */}
@@ -217,7 +225,7 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
                 <b style={{ color: "var(--accent-cyan)" }}> System Manager:</b> Food & material catalogs, operational settings, reports, analysis monitoring.
               </div>
               <div style={{ background: "var(--bg-input)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
-                <b style={{ color: "var(--accent-green)" }}> User:</b> Packaging advisor, ASTM compare, What-If simulator, recommendations, and report downloads.
+                <b style={{ color: "var(--accent-green)" }}> User:</b> Packaging advisor, material comparison, What-If simulator, recommendations, and report downloads.
               </div>
             </div>
           </div>

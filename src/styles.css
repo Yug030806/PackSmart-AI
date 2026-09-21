@@ -140,6 +140,8 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  background: transparent;
+  color: inherit;
   transition: all var(--transition-fast);
 }
 
@@ -293,8 +295,29 @@ button:focus-visible {
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 17px;
-  color: var(--text-primary);
+  color: #ffffff;
   text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar-brand:hover {
+  opacity: 0.92;
+}
+
+.sidebar-brand span {
+  color: #ffffff;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.sidebar-brand b {
+  color: var(--accent-green);
+  font-weight: 800;
 }
 
 .sidebar-brand-logo {

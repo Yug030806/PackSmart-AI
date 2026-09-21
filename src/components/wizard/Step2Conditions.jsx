@@ -109,7 +109,7 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
             />
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--text-muted)" }}>
               <span>20% (Arid)</span>
-              <span>60% (Standard ASTM)</span>
+              <span>60% (Standard Ambient)</span>
               <span>95% (Tropical Saturation)</span>
             </div>
             {validationErrors.humidity && (

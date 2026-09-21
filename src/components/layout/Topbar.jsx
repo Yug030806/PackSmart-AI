@@ -15,7 +15,7 @@ export function Topbar({
       case "advisor": return "Packaging Analysis Wizard";
       case "advisor-result": return "Recommendation & Technical Audit";
       case "simulator": return "What-If Degradation Simulator";
-      case "compare": return "ASTM Materials Comparison";
+      case "compare": return "Materials Comparison";
       case "database": return "Knowledge Base & Food Chemistry";
       case "history": return "My Analyses & Reports";
       case "management": return "Operations & Management Portal";
@@ -40,7 +40,7 @@ export function Topbar({
 
         <div>
           <div className="micro-label" style={{ color: "var(--accent-green)", display: "flex", alignItems: "center", gap: "6px" }}>
-            <Sparkles size={11} /> ASTM Permeation Engine
+            <Sparkles size={11} /> Permeation Engine
           </div>
           <h2 style={{ fontSize: "16px", fontWeight: 700, margin: 0 }}>
             {getPageTitle(currentPage)}
@@ -49,14 +49,6 @@ export function Topbar({
       </div>
 
       <div className="topbar-right">
-        {/* Backend Status Indicator */}
-        <div className="health-pill" title={backendHealthy ? "FastAPI + Scikit-Learn ML Backend Active" : "Local ML Pipeline Active"}>
-          <span className={`status-dot ${backendHealthy ? "" : "offline"}`} />
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
-            {backendHealthy ? "ML Backend 2.0" : "Local Pipeline"}
-          </span>
-        </div>
-
         {/* 1-Click Role Quick-Switching Pills for seamless grading/demoing */}
         <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "var(--bg-input)", padding: "3px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
           <button
@@ -72,7 +64,7 @@ export function Topbar({
             onClick={() => onQuickSwitch("user")}
             title="Switch persona to Standard User"
           >
-            👤 User
+            User
           </button>
           <button
             className="btn btn-ghost"
@@ -87,7 +79,7 @@ export function Topbar({
             onClick={() => onQuickSwitch("system_manager")}
             title="Switch persona to System Manager"
           >
-            🛠️ Manager
+            Manager
           </button>
           <button
             className="btn btn-ghost"
@@ -102,7 +94,7 @@ export function Topbar({
             onClick={() => onQuickSwitch("super_admin")}
             title="Switch persona to Super Admin"
           >
-            👑 Admin
+            Admin
           </button>
         </div>
 

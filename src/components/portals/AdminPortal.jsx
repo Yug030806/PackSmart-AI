@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   Crown, ShieldAlert, CheckCircle2, XCircle, Users, Shield, Sliders,
-  Settings, Download, Plus, Trash2, Lock, Zap
+  Settings, Download, Plus, Trash2, Lock, Zap, Wrench
 } from "lucide-react";
 import { INITIAL_USERS, INITIAL_LOGS, PERMISSIONS_MATRIX } from "../../data/materials";
 
@@ -49,13 +49,13 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
     return (
       <div className="glass-card" style={{ maxWidth: "560px", margin: "40px auto", padding: "40px 24px", textAlign: "center" }}>
         <Crown size={48} style={{ color: "var(--warning-amber)", margin: "0 auto 16px" }} />
-        <h2 style={{ color: "#fff", marginBottom: "8px" }}>👑 Super Admin Access Required</h2>
+        <h2 style={{ color: "#fff", marginBottom: "8px" }}>Super Admin Access Required</h2>
         <p style={{ color: "var(--text-secondary)", fontSize: "13.5px", marginBottom: "24px" }}>
           The Super Admin Console gives unrestricted access to security controls, user management, and system configuration.
         </p>
         <div style={{ display: "flex", justifyContent: "center", gap: "12px" }}>
           <button className="btn btn-primary" onClick={() => onQuickSwitch("super_admin")}>
-            👑 Switch to Super Admin Persona
+            Switch to Super Admin Persona
           </button>
           <button className="btn btn-secondary" onClick={() => onNavigate("dashboard")}>
             Return to Dashboard
@@ -196,9 +196,9 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
           <div className="micro-label amber" style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
             <Crown size={12} /> Root Security Authority
           </div>
-          <h1 className="page-title">👑 Super Admin Console</h1>
+          <h1 className="page-title">Super Admin Console</h1>
           <p className="page-desc">
-            Full authority across users, system managers, security policies, 17-point RBAC permissions, and physical ASTM calibration.
+            Full authority across users, system managers, security policies, RBAC permissions, and physics calibration.
           </p>
         </div>
 
@@ -300,9 +300,9 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
                 <div className="field" style={{ margin: 0 }}>
                   <label>Role</label>
                   <select value={newUser.role} onChange={e => setNewUser({ ...newUser, role: e.target.value })}>
-                    <option value="user">👤 User (Basic)</option>
-                    <option value="system_manager">🛠️ System Manager (Management)</option>
-                    <option value="super_admin">👑 Super Admin (Full)</option>
+                    <option value="user">User (Basic)</option>
+                    <option value="system_manager">System Manager (Management)</option>
+                    <option value="super_admin">Super Admin (Full)</option>
                   </select>
                 </div>
                 <button type="submit" className="btn btn-primary" style={{ height: "40px" }}>Add Account</button>
@@ -346,9 +346,9 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
                         onChange={e => handleRoleChange(u.id, e.target.value)}
                         style={{ background: "var(--bg-input)", border: "1px solid var(--border-subtle)", borderRadius: "6px", color: "#fff", padding: "4px 8px", fontSize: "11.5px" }}
                       >
-                        <option value="user">👤 User</option>
-                        <option value="system_manager">🛠️ System Manager</option>
-                        <option value="super_admin">👑 Super Admin</option>
+                        <option value="user">User</option>
+                        <option value="system_manager">System Manager</option>
+                        <option value="super_admin">Super Admin</option>
                       </select>
                     </td>
                     <td style={{ padding: "12px 10px", textAlign: "right" }}>
@@ -379,9 +379,9 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
               <tr style={{ borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
                 <th style={{ padding: "12px 10px" }}>SYSTEM PRIVILEGE</th>
                 <th style={{ padding: "12px 10px" }}>CATEGORY</th>
-                <th style={{ padding: "12px 10px", textAlign: "center" }}>👤 USER</th>
-                <th style={{ padding: "12px 10px", textAlign: "center" }}>🛠️ MANAGER</th>
-                <th style={{ padding: "12px 10px", textAlign: "center" }}>👑 SUPER ADMIN</th>
+                <th style={{ padding: "12px 10px", textAlign: "center" }}>USER</th>
+                <th style={{ padding: "12px 10px", textAlign: "center" }}>MANAGER</th>
+                <th style={{ padding: "12px 10px", textAlign: "center" }}>SUPER ADMIN</th>
               </tr>
             </thead>
             <tbody>
@@ -482,12 +482,12 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
 
             <div style={{ background: "var(--bg-input)", padding: "20px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
               <h4 style={{ fontSize: "15px", color: "var(--warning-amber)", marginBottom: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <Zap size={15} /> ASTM Barrier Physics Calibration
+                <Zap size={15} /> Barrier Physics Calibration
               </h4>
 
               <div className="range-wrap">
                 <div className="range-header">
-                  <span>ASTM Safety Margin Multiplier:</span>
+                  <span>Safety Margin Multiplier:</span>
                   <span className="range-val">{safetyMargin}x</span>
                 </div>
                 <input

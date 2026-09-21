@@ -21,7 +21,7 @@ export function Sidebar({
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "advisor", label: "New Analysis", icon: Sparkles, highlight: true },
     { id: "history", label: "My Analyses", icon: History },
-    { id: "compare", label: "Materials & ASTM", icon: Layers },
+    { id: "compare", label: "Materials Comparison", icon: Layers },
     { id: "simulator", label: "What-If Simulator", icon: SlidersHorizontal },
     { id: "database", label: "Knowledge Base", icon: FileText }
   ];
@@ -56,9 +56,17 @@ export function Sidebar({
 
       <aside className={`sidebar ${isCollapsed ? "collapsed" : ""} ${isMobileOpen ? "mobile-open" : ""}`}>
         <div className="sidebar-header">
-          <button className="sidebar-brand" onClick={() => handleLinkClick("home")}>
+          <button
+            className="sidebar-brand"
+            onClick={() => handleLinkClick("home")}
+            style={{ background: "transparent", border: "none", padding: 0, outline: "none", cursor: "pointer" }}
+          >
             <img src="/logo.jpg" alt="PackSmart AI" className="sidebar-brand-logo" />
-            {!isCollapsed && <span>PackSmart <b>AI</b></span>}
+            {!isCollapsed && (
+              <span style={{ color: "#ffffff", fontSize: "16px", fontWeight: 700 }}>
+                PackSmart <b style={{ color: "var(--accent-green)", fontWeight: 800 }}>AI</b>
+              </span>
+            )}
           </button>
           <button
             className="btn btn-ghost"
@@ -138,8 +146,8 @@ export function Sidebar({
               onClick={() => handleLinkClick(currentUser.role === "super_admin" ? "admin" : currentUser.role === "system_manager" ? "management" : "login")}
               title={`Logged in as ${currentUser.name} (${currentUser.role_title})`}
             >
-              <div className="sidebar-user-avatar">
-                {currentUser.badge_icon || "👤"}
+              <div className="sidebar-user-avatar" style={{ fontWeight: 700, fontSize: "12px", color: "var(--accent-green)", background: "rgba(50, 213, 131, 0.12)", border: "1px solid rgba(50, 213, 131, 0.3)" }}>
+                {currentUser.name ? currentUser.name.charAt(0) : "U"}
               </div>
               {!isCollapsed && (
                 <div className="sidebar-user-info">

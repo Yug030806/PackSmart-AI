@@ -15,12 +15,12 @@ export function Dashboard({ onNavigate, onSelectFoodAndLaunch, backendHealthy, c
   };
 
   const presetCommodities = [
-    { key: "chips", name: "Potato Chips", category: "Snacks", icon: "🥔", note: "Lipid Oxidation Critical" },
-    { key: "biscuits", name: "Biscuits & Bakery", category: "Bakery", icon: "🍪", note: "Moisture Sorption Limit" },
-    { key: "tomato", name: "Fresh Tomato", category: "Produce", icon: "🍅", note: "Active Respiration / MAP" },
-    { key: "paneer", name: "Fresh Paneer", category: "Dairy", icon: "🧀", note: "Microbial Cold Chain" },
-    { key: "nuts", name: "Roasted Almonds", category: "Snacks", icon: "🥜", note: "Extreme OTR Shield" },
-    { key: "chocolate", name: "Dark Chocolate", category: "Confectionery", icon: "🍫", note: "Fat Bloom Barrier" }
+    { key: "chips", name: "Potato Chips", category: "Snacks", note: "Lipid Oxidation Critical" },
+    { key: "biscuits", name: "Biscuits & Bakery", category: "Bakery", note: "Moisture Sorption Limit" },
+    { key: "tomato", name: "Fresh Tomato", category: "Produce", note: "Active Respiration / MAP" },
+    { key: "paneer", name: "Fresh Paneer", category: "Dairy", note: "Microbial Cold Chain" },
+    { key: "nuts", name: "Roasted Almonds", category: "Snacks", note: "Extreme OTR Shield" },
+    { key: "chocolate", name: "Dark Chocolate", category: "Confectionery", note: "Fat Bloom Barrier" }
   ];
 
   return (
@@ -125,14 +125,13 @@ export function Dashboard({ onNavigate, onSelectFoodAndLaunch, backendHealthy, c
               style={{ padding: "18px", display: "flex", flexDirection: "column", gap: "10px" }}
               onClick={() => onSelectFoodAndLaunch(c.key)}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <span style={{ fontSize: "28px" }}>{c.icon}</span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <b style={{ fontSize: "15px", color: "#fff" }}>{c.name}</b>
                 <span className="spec-chip" style={{ color: "var(--accent-cyan)", borderColor: "rgba(54, 191, 250, 0.25)" }}>
                   {c.category}
                 </span>
               </div>
               <div>
-                <b style={{ fontSize: "15px", color: "#fff", display: "block" }}>{c.name}</b>
                 <small style={{ color: "var(--text-secondary)", fontSize: "11.5px" }}>{c.note}</small>
               </div>
               <div style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--accent-green)", fontWeight: 600 }}>
@@ -150,7 +149,7 @@ export function Dashboard({ onNavigate, onSelectFoodAndLaunch, backendHealthy, c
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
             <div>
               <span className="micro-label green">Engine Telemetry</span>
-              <h3 style={{ fontSize: "17px", fontWeight: 700, margin: "2px 0 0" }}>ASTM Permeation & ML Pipeline Status</h3>
+              <h3 style={{ fontSize: "17px", fontWeight: 700, margin: "2px 0 0" }}>Permeation & ML Pipeline Status</h3>
             </div>
             <span className="badge-pass">
               <CheckCircle2 size={13} /> Online & Validated
@@ -165,14 +164,14 @@ export function Dashboard({ onNavigate, onSelectFoodAndLaunch, backendHealthy, c
             </div>
 
             <div style={{ background: "var(--bg-input)", padding: "12px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
-              <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>ASTM Standards Verified</span>
-              <b style={{ display: "block", color: "#fff", fontSize: "13px", marginTop: "4px" }}>ASTM D3985 & ASTM F1249</b>
+              <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Barrier Standards Verified</span>
+              <b style={{ display: "block", color: "#fff", fontSize: "13px", marginTop: "4px" }}>OTR & WVTR Permeation Certified</b>
               <small style={{ color: "var(--accent-green)", fontSize: "10.5px" }}>Temperature Arrhenius Scaled</small>
             </div>
           </div>
 
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)", paddingTop: "12px" }}>
-            <span>Backend Service: <b>{backendHealthy ? "FastAPI 2.0 (Port 8000)" : "Browser Client Engine"}</b></span>
+            <span>Backend Service: <b>{backendHealthy ? "FastAPI (Port 8000)" : "Local Engine"}</b></span>
             <span>Security Layer: <b>3-Tier RBAC Active</b></span>
           </div>
         </div>
@@ -196,7 +195,7 @@ export function Dashboard({ onNavigate, onSelectFoodAndLaunch, backendHealthy, c
                 style={{ justifyContent: "flex-start", width: "100%", fontSize: "12.5px" }}
                 onClick={() => onNavigate("compare")}
               >
-                <Layers size={15} style={{ color: "var(--accent-green)" }} /> ASTM Material Comparison Table
+                <Layers size={15} style={{ color: "var(--accent-green)" }} /> Material Comparison Table
               </button>
               <button
                 className="btn btn-secondary"
@@ -209,7 +208,7 @@ export function Dashboard({ onNavigate, onSelectFoodAndLaunch, backendHealthy, c
           </div>
 
           <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px solid var(--border-subtle)", fontSize: "11px", color: "var(--text-muted)" }}>
-            Need help? Explore the <button style={{ color: "var(--accent-green)", textDecoration: "underline", background: "none", border: "none", font: "inherit", cursor: "pointer" }} onClick={() => onNavigate("compare")}>ASTM Specifications</button> or launch an advisor run.
+            Need help? Explore the <button style={{ color: "var(--accent-green)", textDecoration: "underline", background: "none", border: "none", font: "inherit", cursor: "pointer" }} onClick={() => onNavigate("compare")}>Material Specifications</button> or launch an advisor run.
           </div>
         </div>
       </div>

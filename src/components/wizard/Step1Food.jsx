@@ -150,8 +150,10 @@ export function Step1Food({ input, setInput, validationErrors = {}, onSelectFood
               className={`food-card ${isSelected ? "selected" : ""}`}
               onClick={() => onSelectFood(key)}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <span className="food-card-icon">{f.icon || "📦"}</span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <span className="spec-chip" style={{ color: "var(--accent-cyan)", borderColor: "rgba(54, 191, 250, 0.25)" }}>
+                  {f.category}
+                </span>
                 {isSelected && (
                   <span style={{
                     width: "22px",

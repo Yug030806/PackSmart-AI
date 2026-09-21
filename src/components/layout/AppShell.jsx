@@ -62,10 +62,10 @@ export function AppShell({
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <img src="/logo.jpg" alt="PackSmart AI" style={{ width: "20px", height: "20px", borderRadius: "4px" }} />
-              <span><b>PackSmart AI</b> · Real Machine Learning & ASTM Barrier Physics Engine</span>
+              <span><b>PackSmart AI</b> · Machine Learning & Barrier Physics Engine</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
-              <ShieldCheck size={14} style={{ color: "var(--accent-green)" }} /> ASTM D3985 / ASTM F1249 · 3-Tier Enterprise RBAC
+              <ShieldCheck size={14} style={{ color: "var(--accent-green)" }} /> Permeation & Preservation Standards · 3-Tier Enterprise RBAC
             </div>
           </div>
         </footer>

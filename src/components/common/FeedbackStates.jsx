@@ -3,7 +3,7 @@ import { CircleHelp, ArrowRight } from "lucide-react";
 
 export function EmptyState({
   title = "No analyses yet",
-  description = "Start your first packaging analysis and let PackSmart AI evaluate the best solution based on ASTM barrier physics.",
+  description = "Start your first packaging analysis and let PackSmart AI evaluate the best solution based on barrier physics.",
   actionText = "Start Analysis →",
   onAction
 }) {

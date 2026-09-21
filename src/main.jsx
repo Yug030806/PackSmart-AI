@@ -45,7 +45,7 @@ function App() {
       role: "super_admin",
       access_level: "Full",
       role_title: "Super Admin",
-      badge_icon: "👑",
+      badge_icon: "",
       permissions: [
         "use_packaging_advisor", "compare_materials", "what_if_simulator",
         "view_recommendations", "download_reports", "view_history",
@@ -150,7 +150,7 @@ function App() {
         role: "super_admin",
         access_level: "Full",
         role_title: "Super Admin",
-        badge_icon: "👑",
+        badge_icon: "",
         permissions: [
           "use_packaging_advisor", "compare_materials", "what_if_simulator",
           "view_recommendations", "download_reports", "view_history",
@@ -167,7 +167,7 @@ function App() {
         role: "system_manager",
         access_level: "Management",
         role_title: "System Manager",
-        badge_icon: "🛠️",
+        badge_icon: "",
         permissions: [
           "use_packaging_advisor", "compare_materials", "what_if_simulator",
           "view_recommendations", "download_reports", "view_history",
@@ -182,7 +182,7 @@ function App() {
         role: "user",
         access_level: "Basic",
         role_title: "User",
-        badge_icon: "👤",
+        badge_icon: "",
         permissions: [
           "use_packaging_advisor", "compare_materials", "what_if_simulator",
           "view_recommendations", "download_reports", "view_history"
@@ -680,7 +680,7 @@ function calculateFallbackRecommendation(inp) {
         microbial_spoilage_days: 180,
         lipid_oxidation_days: isProduce ? 45 : 104,
         moisture_staling_days: isProduce ? 30 : 120,
-        scientific_validation_disclaimer: "Kinetic degradation simulation based on ASTM permeation and Arrhenius temperature dependency."
+        scientific_validation_disclaimer: "Kinetic degradation simulation based on permeation and Arrhenius temperature dependency."
       },
       map_gas_mix: {
         initial_flush_o2_pct: isProduce ? 3.5 : 0.2,
@@ -752,7 +752,7 @@ function calculateFallbackRecommendation(inp) {
       outputs: "Packaging suitability",
       test_r2_score: 0.94,
       test_mae: 0.038,
-      dataset_notice: "PROTOTYPE / ILLUSTRATIVE: Synthetic training dataset of 2,000 samples calibrated against ASTM permeation physics and Arrhenius kinetics; not experimentally validated with empirical storage trials."
+      dataset_notice: "PROTOTYPE / ILLUSTRATIVE: Synthetic training dataset of 2,000 samples calibrated against permeation physics and Arrhenius kinetics; not experimentally validated with empirical storage trials."
     }
   };
 }

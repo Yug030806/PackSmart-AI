@@ -77,7 +77,7 @@ export function WhatIfSimulator({ input }) {
           microbial_spoilage_days: microDays,
           lipid_oxidation_days: oxDays,
           moisture_staling_days: moistDays,
-          scientific_validation_disclaimer: "Kinetic degradation model based on ASTM permeation and Arrhenius temperature factors."
+          scientific_validation_disclaimer: "Kinetic degradation model based on permeation and Arrhenius temperature factors."
         });
         setIsSimulating(false);
       });

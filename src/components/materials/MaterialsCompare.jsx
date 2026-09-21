@@ -104,11 +104,11 @@ export function MaterialsCompare() {
       <div className="page-header">
         <div>
           <div className="micro-label green" style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
-            <Layers size={12} /> ASTM Material Benchmark Matrix
+            <Layers size={12} /> Material Benchmark Matrix
           </div>
           <h1 className="page-title">Compare Barrier Properties</h1>
           <p className="page-desc">
-            Evaluate side-by-side ASTM D3985 gas transmission rates, ASTM F1249 moisture barriers, and circular end-of-life streams.
+            Evaluate side-by-side gas transmission rates (OTR), moisture barriers (WVTR), and circular end-of-life streams.
           </p>
         </div>
       </div>
@@ -163,7 +163,7 @@ export function MaterialsCompare() {
             <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
               <td style={{ padding: "14px 16px", color: "var(--text-secondary)" }}>
                 <b>Nominal OTR</b>
-                <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>ASTM D3985 · cc/(m²·day·atm)</div>
+                <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>Oxygen Flux · cc/(m²·day·atm)</div>
               </td>
               {selectedMaterials.map(m => (
                 <td key={m.id} style={{ padding: "14px 16px" }}>
@@ -176,7 +176,7 @@ export function MaterialsCompare() {
             <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
               <td style={{ padding: "14px 16px", color: "var(--text-secondary)" }}>
                 <b>Nominal WVTR</b>
-                <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>ASTM F1249 · g/(m²·day)</div>
+                <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>Moisture Flux · g/(m²·day)</div>
               </td>
               {selectedMaterials.map(m => (
                 <td key={m.id} style={{ padding: "14px 16px" }}>
@@ -237,12 +237,12 @@ export function MaterialsCompare() {
         </table>
       </div>
 
-      {/* Live ASTM Barrier Analysis Card (Calls /api/calculate-barrier) */}
+      {/* Live Barrier Analysis Card (Calls /api/calculate-barrier) */}
       <div className="glass-card" style={{ padding: "26px", marginBottom: "32px", border: "1px solid rgba(50, 213, 131, 0.3)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
           <div>
             <div className="micro-label green" style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
-              <ShieldCheck size={13} /> Live ASTM D3985 / F1249 Permeation Validator
+              <ShieldCheck size={13} /> Live Permeation & Barrier Validator
             </div>
             <h2 style={{ fontSize: "20px", fontWeight: 700, margin: 0, color: "#fff" }}>
               Real-Time Barrier Thresholds & Material Suitability Matrix
@@ -260,7 +260,7 @@ export function MaterialsCompare() {
             style={{ display: "flex", alignItems: "center", gap: "8px" }}
           >
             <RefreshCw size={14} className={barrierLoading ? "spin" : ""} />
-            {barrierLoading ? "Calculating ASTM Kinetics..." : "Run Barrier Calculation"}
+            {barrierLoading ? "Calculating Permeation Kinetics..." : "Run Barrier Calculation"}
           </button>
         </div>
 
@@ -312,7 +312,7 @@ export function MaterialsCompare() {
                   {barrierCheckResult.required_barrier?.target_otr_max !== null ? barrierCheckResult.required_barrier?.target_otr_max : "N/A"}
                   <small style={{ fontSize: "12px", color: "var(--text-secondary)", marginLeft: "4px", fontWeight: 400 }}>cc/(m²·day·atm)</small>
                 </div>
-                <small style={{ fontSize: "11px", color: "var(--text-muted)" }}>Oxygen permeation limit (ASTM D3985)</small>
+                <small style={{ fontSize: "11px", color: "var(--text-muted)" }}>Oxygen permeation limit (OTR)</small>
               </div>
 
               <div style={{ background: "rgba(54, 191, 250, 0.08)", border: "1px solid rgba(54, 191, 250, 0.25)", borderRadius: "var(--radius-md)", padding: "14px" }}>
@@ -321,7 +321,7 @@ export function MaterialsCompare() {
                   {barrierCheckResult.required_barrier?.target_wvtr_max !== null ? barrierCheckResult.required_barrier?.target_wvtr_max : "N/A"}
                   <small style={{ fontSize: "12px", color: "var(--text-secondary)", marginLeft: "4px", fontWeight: 400 }}>g/(m²·day)</small>
                 </div>
-                <small style={{ fontSize: "11px", color: "var(--text-muted)" }}>Moisture vapor flux limit (ASTM F1249)</small>
+                <small style={{ fontSize: "11px", color: "var(--text-muted)" }}>Moisture vapor flux limit (WVTR)</small>
               </div>
 
               <div style={{ background: "rgba(245, 185, 66, 0.08)", border: "1px solid rgba(245, 185, 66, 0.25)", borderRadius: "var(--radius-md)", padding: "14px" }}>
@@ -338,7 +338,7 @@ export function MaterialsCompare() {
             {/* Matrix of Materials Checked */}
             <div style={{ overflowX: "auto" }}>
               <span className="micro-label" style={{ display: "block", marginBottom: "8px" }}>
-                ASTM Specification Compliance Across All Materials:
+                Specification Compliance Across All Materials:
               </span>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12.5px" }}>
                 <thead>

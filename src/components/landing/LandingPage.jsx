@@ -12,7 +12,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
       <section className="landing-hero">
         <div className="hero-content">
           <div className="micro-label green" style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(50, 213, 131, 0.1)", padding: "6px 14px", borderRadius: "9999px", marginBottom: "18px", border: "1px solid rgba(50, 213, 131, 0.25)" }}>
-            <Sparkles size={13} /> ASTM D3985 / F1249 Physics + Scikit-Learn ML
+            <Sparkles size={13} /> Barrier Physics + Scikit-Learn ML
           </div>
 
           <h1>
@@ -72,7 +72,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
             <Package size={52} style={{ color: "var(--accent-green)" }} />
             <div style={{ textAlign: "center" }}>
               <b style={{ color: "#fff", fontSize: "13px", display: "block", fontFamily: "var(--font-heading)" }}>Hermetic Pouch</b>
-              <small style={{ color: "var(--accent-cyan)", fontSize: "10px", fontFamily: "var(--font-mono)" }}>ASTM Verified</small>
+              <small style={{ color: "var(--accent-cyan)", fontSize: "10px", fontFamily: "var(--font-mono)" }}>Verified</small>
             </div>
             <div style={{ display: "flex", gap: "4px" }}>
               <span style={{ fontSize: "9px", background: "rgba(50, 213, 131, 0.15)", color: "var(--accent-green)", padding: "2px 6px", borderRadius: "4px" }}>
@@ -138,7 +138,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
             { step: "01", title: "User Input", desc: "Food chemistry & storage" },
             { step: "02", title: "Preprocessing", desc: "Sorption isotherms" },
             { step: "03", title: "ML Pipeline", desc: "MultiOutput Random Forest" },
-            { step: "04", title: "Barrier Check", desc: "ASTM OTR & WVTR pass/fail" },
+            { step: "04", title: "Barrier Check", desc: "OTR & WVTR pass/fail" },
             { step: "05", title: "Optimization", desc: "Pareto & gauge sizing" },
             { step: "06", title: "Recommendation", desc: "Explainable result" }
           ].map((item, idx) => (
@@ -190,7 +190,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                 <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <User size={18} style={{ color: "var(--accent-green)" }} /> 👤 User
+                  <User size={18} style={{ color: "var(--accent-green)" }} /> User
                 </span>
                 <span className="badge-pass" style={{ fontSize: "10.5px" }}>Basic Access</span>
               </div>
@@ -210,7 +210,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
               style={{ width: "100%", fontSize: "12.5px" }}
               onClick={() => { onQuickSwitch("user"); onNavigate("advisor"); }}
             >
-              Test User Persona 👤
+              Test User Persona
             </button>
           </div>
 
@@ -219,7 +219,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                 <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <Wrench size={18} style={{ color: "var(--accent-cyan)" }} /> 🛠️ System Manager
+                  <Wrench size={18} style={{ color: "var(--accent-cyan)" }} /> System Manager
                 </span>
                 <span className="badge-pass" style={{ fontSize: "10.5px", background: "rgba(54, 191, 250, 0.12)", color: "var(--accent-cyan)", borderColor: "rgba(54, 191, 250, 0.35)" }}>
                   Management Access
@@ -241,7 +241,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
               style={{ width: "100%", fontSize: "12.5px" }}
               onClick={() => { onQuickSwitch("system_manager"); onNavigate("management"); }}
             >
-              Test System Manager Persona 🛠️
+              Test System Manager Persona
             </button>
           </div>
 
@@ -250,7 +250,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                 <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <Crown size={18} style={{ color: "var(--warning-amber)" }} /> 👑 Super Admin
+                  <Crown size={18} style={{ color: "var(--warning-amber)" }} /> Super Admin
                 </span>
                 <span className="badge-marginal" style={{ fontSize: "10.5px" }}>Full System Access</span>
               </div>
@@ -270,7 +270,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
               style={{ width: "100%", fontSize: "12.5px" }}
               onClick={() => { onQuickSwitch("super_admin"); onNavigate("admin"); }}
             >
-              Test Super Admin Persona 👑
+              Test Super Admin Persona
             </button>
           </div>
         </div>

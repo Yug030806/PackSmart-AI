@@ -26,7 +26,7 @@ export function KnowledgeBase() {
           </div>
           <h1 className="page-title">Packaging Knowledge Base</h1>
           <p className="page-desc">
-            Scientific ASTM barrier benchmarks and equilibrium sorption isotherm data configured for the PackSmart ML pipeline.
+            Scientific barrier benchmarks and equilibrium sorption isotherm data configured for the PackSmart ML pipeline.
           </p>
         </div>
       </div>
@@ -89,11 +89,11 @@ export function KnowledgeBase() {
 
               <div className="barrier-metric-row">
                 <div className="barrier-metric-val">
-                  <span>ASTM OTR</span>
+                  <span>Barrier OTR</span>
                   <b>{m.nominal_otr} <small style={{ fontSize: "10px", color: "var(--text-muted)" }}>cc/m²·d</small></b>
                 </div>
                 <div className="barrier-metric-val">
-                  <span>ASTM WVTR</span>
+                  <span>Barrier WVTR</span>
                   <b>{m.nominal_wvtr} <small style={{ fontSize: "10px", color: "var(--text-muted)" }}>g/m²·d</small></b>
                 </div>
               </div>
@@ -116,7 +116,6 @@ export function KnowledgeBase() {
                 <span className="spec-chip" style={{ color: "var(--accent-green)", borderColor: "rgba(50, 213, 131, 0.25)" }}>
                   {f.category}
                 </span>
-                <span style={{ fontSize: "22px" }}>{f.icon || "🧪"}</span>
               </div>
 
               <div>

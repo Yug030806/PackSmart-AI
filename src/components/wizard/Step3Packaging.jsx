@@ -115,7 +115,7 @@ export function Step3Packaging({ input, setInput, isAnalyzing = false, onBack, o
 
       {/* Materials Candidate Cards */}
       <div style={{ marginBottom: "14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span className="micro-label">Candidate Polymer Structures (ASTM D3985 / F1249 Specifications)</span>
+        <span className="micro-label">Candidate Polymer Structures (Barrier Specifications)</span>
         <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>
           {materials.length} Standard Material Grades Available
         </span>
@@ -193,13 +193,13 @@ export function Step3Packaging({ input, setInput, isAnalyzing = false, onBack, o
 
           <div style={{ display: "flex", gap: "12px" }}>
             <div style={{ textAlign: "right" }}>
-              <span className="micro-label">ASTM Gas OTR</span>
+              <span className="micro-label">Gas Barrier OTR</span>
               <b style={{ display: "block", color: "var(--accent-green)", fontSize: "16px" }}>
                 {activeMaterial.nominal_otr} <small style={{ fontSize: "11px", color: "var(--text-secondary)" }}>cc</small>
               </b>
             </div>
             <div style={{ textAlign: "right" }}>
-              <span className="micro-label">ASTM Vapor WVTR</span>
+              <span className="micro-label">Vapor Barrier WVTR</span>
               <b style={{ display: "block", color: "var(--accent-cyan)", fontSize: "16px" }}>
                 {activeMaterial.nominal_wvtr} <small style={{ fontSize: "11px", color: "var(--text-secondary)" }}>g</small>
               </b>

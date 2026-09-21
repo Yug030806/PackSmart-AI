@@ -25,6 +25,10 @@ export class ErrorBoundary extends React.Component {
     this.setState({ hasError: false, error: null, errorInfo: null });
     if (this.props.onReset) {
       this.props.onReset();
+    } else {
+      try {
+        window.location.href = "/";
+      } catch (e) {}
     }
   };
 

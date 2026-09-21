@@ -143,7 +143,7 @@ export function ServerStatusBanner({
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px", marginBottom: "8px" }}>
               <div>• Target Backend URL: <code style={{ color: "var(--accent-cyan)", fontFamily: "var(--font-mono)" }}>http://127.0.0.1:8000</code></div>
               <div>• Active Health Check: <code style={{ color: "var(--accent-cyan)", fontFamily: "var(--font-mono)" }}>GET /api/health</code></div>
-              <div>• Fallback Engine: <b style={{ color: "var(--accent-green)" }}>Active (ASTM Fickian Kinetics)</b></div>
+              <div>• Fallback Engine: <b style={{ color: "var(--accent-green)" }}>Active (Fickian Kinetics)</b></div>
             </div>
             <div style={{ color: "var(--text-muted)", fontSize: "11px" }}>
               <b>Troubleshooting:</b> Ensure the FastAPI backend is running via <code style={{ color: "#fff" }}>source .venv/bin/activate && python backend/run.py</code>. If you are behind a corporate proxy or firewall, check port 8000.

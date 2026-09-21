@@ -67,7 +67,7 @@ export function ReportPreviewModal({ isOpen, onClose, result, input }) {
           {/* Header Banner */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderBottom: "2px solid rgba(50, 213, 131, 0.4)", paddingBottom: "18px", marginBottom: "24px" }}>
             <div>
-              <div className="micro-label green">ASTM Technical Assessment & Engineering Report</div>
+              <div className="micro-label green">Technical Assessment & Engineering Report</div>
               <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#fff", margin: "4px 0" }}>PackSmart AI Recommendation Specification</h2>
               <p style={{ color: "var(--text-secondary)", fontSize: "12px", margin: 0 }}>
                 Generated on {new Date().toLocaleDateString()} · Document ID: PS-RPT-{Date.now().toString().slice(-6)}
@@ -75,7 +75,7 @@ export function ReportPreviewModal({ isOpen, onClose, result, input }) {
             </div>
             <div style={{ textAlign: "right" }}>
               <span className="badge-pass" style={{ fontSize: "12px" }}>
-                <CheckCircle2 size={13} /> ASTM Verified (PASS)
+                <CheckCircle2 size={13} /> Verified (PASS)
               </span>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--text-muted)", marginTop: "4px" }}>
                 R² = {result.ml_model_metadata?.test_r2_score || "0.996"}
@@ -118,7 +118,7 @@ export function ReportPreviewModal({ isOpen, onClose, result, input }) {
               {top.category} · Recommended Gauge: <b>{top.recommended_thickness_um} µm</b> · Recyclability: <b>{top.recyclability_class}</b>
             </div>
             <div style={{ fontSize: "12px", color: "#bce3d2", lineHeight: "1.5", marginBottom: "12px" }}>
-              <b>Engineering Rationale:</b> Passes all physical ASTM barrier requirements with verified OTR and WVTR safety margins. Optimized gauge minimizes plastic resin consumption while maintaining full target shelf-life safety buffer.
+              <b>Engineering Rationale:</b> Passes all barrier requirements with verified OTR and WVTR safety margins. Optimized gauge minimizes resin consumption while maintaining shelf-life safety buffer.
             </div>
 
             {/* Why This Material? Section */}
@@ -146,12 +146,12 @@ export function ReportPreviewModal({ isOpen, onClose, result, input }) {
           {/* Section 4: Physical Barrier Verification */}
           <div style={{ marginBottom: "20px" }}>
             <b style={{ color: "#fff", fontSize: "13px", display: "block", marginBottom: "8px" }}>
-              4. Physical ASTM Barrier Compliance Matrix
+              4. Physical Barrier Compliance Matrix
             </b>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12.5px" }}>
               <thead>
                 <tr style={{ background: "var(--bg-input)", borderBottom: "1px solid var(--border-subtle)", textAlign: "left" }}>
-                  <th style={{ padding: "8px 10px" }}>ASTM Test Parameter</th>
+                  <th style={{ padding: "8px 10px" }}>Test Parameter</th>
                   <th style={{ padding: "8px 10px" }}>Food Requirement Limit</th>
                   <th style={{ padding: "8px 10px" }}>Material Barrier Value</th>
                   <th style={{ padding: "8px 10px" }}>Safety Margin</th>
@@ -160,14 +160,14 @@ export function ReportPreviewModal({ isOpen, onClose, result, input }) {
               </thead>
               <tbody>
                 <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                  <td style={{ padding: "8px 10px" }}>Oxygen Transmission (ASTM D3985)</td>
+                  <td style={{ padding: "8px 10px" }}>Oxygen Transmission Rate (OTR)</td>
                   <td style={{ padding: "8px 10px" }}>≤ {req.target_otr_max} cc/m²·day</td>
                   <td style={{ padding: "8px 10px" }}><b>{top.barrier_check?.actual_otr} cc</b></td>
                   <td style={{ padding: "8px 10px", color: "var(--accent-green)" }}>+{top.barrier_check?.otr_margin_pct}%</td>
                   <td style={{ padding: "8px 10px" }}><span className="badge-pass">PASS</span></td>
                 </tr>
                 <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                  <td style={{ padding: "8px 10px" }}>Water Vapor Transmission (ASTM F1249)</td>
+                  <td style={{ padding: "8px 10px" }}>Water Vapor Transmission Rate (WVTR)</td>
                   <td style={{ padding: "8px 10px" }}>≤ {req.target_wvtr_max} g/m²·day</td>
                   <td style={{ padding: "8px 10px" }}><b>{top.barrier_check?.actual_wvtr} g</b></td>
                   <td style={{ padding: "8px 10px", color: "var(--accent-green)" }}>+{top.barrier_check?.wvtr_margin_pct}%</td>
@@ -239,14 +239,14 @@ export function ReportPreviewModal({ isOpen, onClose, result, input }) {
             </div>
 
             <div style={{ fontSize: "11px", color: "#f7d288", background: "rgba(245, 185, 66, 0.08)", padding: "8px 12px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(245, 185, 66, 0.25)", lineHeight: "1.45" }}>
-              <b>Prototype Notice:</b> Trained on 2,000 synthetic prototype samples based on ASTM permeation benchmarks and kinetic equations. Illustrative prototype model; experimental shelf-life storage trials are required prior to commercial production deployment.
+              <b>Prototype Notice:</b> Trained on 2,000 synthetic samples based on permeation benchmarks and kinetic equations. Illustrative prototype model; experimental shelf-life trials required prior to commercial deployment.
             </div>
           </div>
 
           {/* Verification Sign-Off */}
           <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "14px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", color: "var(--text-muted)" }}>
-            <span>Verified by: <b>PackSmart AI Advisory Engine (Random Forest ML + ASTM Thermodynamics)</b></span>
-            <span>Compliance: <b>ASTM D3985 / ASTM F1249 Standard</b></span>
+            <span>Verified by: <b>PackSmart AI Advisory Engine (Random Forest ML + Thermodynamics)</b></span>
+            <span>Compliance: <b>OTR / WVTR Standard Barrier Tests</b></span>
           </div>
         </div>
       </div>

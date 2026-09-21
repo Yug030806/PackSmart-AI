@@ -268,7 +268,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
           <div style={{ background: "rgba(0, 0, 0, 0.35)", padding: "12px 16px", borderRadius: "var(--radius-md)", border: "1px solid rgba(50, 213, 131, 0.2)", maxWidth: "600px" }}>
             <b style={{ color: "var(--accent-green)", fontSize: "12px", display: "block", marginBottom: "2px" }}>Engineering Verification:</b>
             <span style={{ fontSize: "12.5px", color: "#e4efe9", lineHeight: "1.5" }}>
-              Passes all ASTM barrier thresholds with verified OTR and WVTR safety margins. Optimized gauge of {activeCandidate.recommended_thickness_um} µm minimizes polymer mass while preventing premature lipid oxidation and staling.
+              Passes all barrier thresholds with verified OTR and WVTR safety margins. Gauge of {activeCandidate.recommended_thickness_um} µm minimizes polymer mass while preventing premature oxidation and staling.
             </span>
           </div>
 
@@ -478,7 +478,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "28px" }}>
         {/* OTR Card */}
         <div className="glass-card" style={{ padding: "20px" }}>
-          <div className="micro-label green">ASTM D3985 O₂ Barrier</div>
+          <div className="micro-label green">O₂ Barrier (OTR)</div>
           <div style={{ fontFamily: "var(--font-heading)", fontSize: "24px", fontWeight: 800, color: "#fff", margin: "6px 0 2px" }}>
             <AnimatedNumber value={activeCandidate.barrier_check?.actual_otr || 0} decimals={2} />
             <small style={{ fontSize: "11px", color: "var(--text-muted)", marginLeft: "4px" }}>cc/m²·d</small>
@@ -493,7 +493,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
 
         {/* WVTR Card */}
         <div className="glass-card" style={{ padding: "20px" }}>
-          <div className="micro-label cyan">ASTM F1249 Moisture</div>
+          <div className="micro-label cyan">Moisture Barrier (WVTR)</div>
           <div style={{ fontFamily: "var(--font-heading)", fontSize: "24px", fontWeight: 800, color: "#fff", margin: "6px 0 2px" }}>
             <AnimatedNumber value={activeCandidate.barrier_check?.actual_wvtr || 0} decimals={2} />
             <small style={{ fontSize: "11px", color: "var(--text-muted)", marginLeft: "4px" }}>g/m²·d</small>
@@ -559,16 +559,16 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
       <section className="glass-card" style={{ padding: "26px", marginBottom: "28px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
           <div>
-            <span className="micro-label green">ASTM Technical Validation</span>
+            <span className="micro-label green">Technical Validation</span>
             <h3 style={{ fontSize: "18px", color: "#fff", margin: "2px 0 0" }}>
-              Why this recommendation? ASTM Permeability Verification
+              Why this recommendation? Permeability Verification
             </h3>
             <p style={{ fontSize: "12.5px", color: "var(--text-secondary)" }}>
               Physical barrier performance calculated and scaled to {input.temperature}°C storage temperature.
             </p>
           </div>
           <span className="badge-pass" style={{ padding: "6px 12px" }}>
-            ASTM Compliant ✓
+            Compliant ✓
           </span>
         </div>
 
@@ -578,7 +578,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
           <div style={{ background: "var(--bg-input)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "8px" }}>
               <span style={{ color: "var(--text-secondary)" }}>Oxygen Transmission Rate (OTR)</span>
-              <span className="micro-label green">ASTM D3985</span>
+              <span className="micro-label green">OTR Standard</span>
             </div>
 
             <div className="validation-bar-container">
@@ -600,7 +600,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
           <div style={{ background: "var(--bg-input)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "8px" }}>
               <span style={{ color: "var(--text-secondary)" }}>Water Vapor Transmission (WVTR)</span>
-              <span className="micro-label cyan">ASTM F1249</span>
+              <span className="micro-label cyan">WVTR Standard</span>
             </div>
 
             <div className="validation-bar-container">
@@ -879,7 +879,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
               {mlMeta.training_samples || "2000 prototype samples"}
             </div>
             <small style={{ color: "var(--text-secondary)", fontSize: "11px", display: "block" }}>
-              Stratified synthetic samples based on ASTM permeability standards
+              Stratified synthetic samples based on permeability standards
             </small>
           </div>
 
@@ -945,7 +945,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
             <b style={{ color: "#fff", display: "block", marginBottom: "2px" }}>
               Prototype & Illustrative Dataset Notice (Important for Presentation & Commercial Deployment):
             </b>
-            The current Random Forest model is trained on a <b>prototype synthetic dataset (2,000 prototype samples)</b> generated via thermodynamic barrier equations (ASTM D3985 for OTR, ASTM F1249 for WVTR) coupled with Arrhenius $Q_{10}$ kinetic reaction rates. This provides rigorous physical feasibility screening and multi-objective Pareto optimization, but is strictly <b>illustrative / prototype</b>. Commercial deployment requires experimental validation with empirical shelf-life storage trials, microbial colony growth testing, and laboratory permeameter calibration.
+            The current Random Forest model is trained on a <b>prototype synthetic dataset (2,000 samples)</b> generated via thermodynamic barrier equations (OTR, WVTR) coupled with Arrhenius kinetic rates. This provides rigorous physical feasibility screening, but is strictly <b>illustrative / prototype</b>. Commercial deployment requires experimental validation with empirical shelf-life trials and laboratory calibration.
           </div>
         </div>
       </section>
@@ -953,7 +953,7 @@ export function Step5Results({ result, input, onNewAnalysis, onOpenReport, onOpe
       {/* Candidate Materials Audit Table */}
       <section className="glass-card" style={{ padding: "26px", marginBottom: "32px" }}>
         <h3 style={{ fontSize: "18px", color: "#fff", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
-          <BarChart3 size={18} style={{ color: "var(--accent-green)" }} /> All Candidate Materials: Physical ASTM Audit
+          <BarChart3 size={18} style={{ color: "var(--accent-green)" }} /> All Candidate Materials: Barrier Audit
         </h3>
 
         <div style={{ overflowX: "auto" }}>
