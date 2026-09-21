@@ -90,10 +90,11 @@ def root():
     }
 
 
-from .supabase_client import is_supabase_configured
+from .supabase_client import is_supabase_configured, fetch_table, insert_record
 import os
 
 @app.get("/health")
+@app.get("/api/health")
 def health():
     return {
         "status": "healthy",
@@ -123,12 +124,54 @@ def get_recommendation(user_input: FoodInput):
     """
     Complete ML pipeline endpoint:
     User Input -> Preprocessing -> ML Model -> Suitability -> Optimization -> Recommendation
+    Automatically archives output to Supabase recommendation_history table.
     """
     try:
         response = generate_recommendation_pipeline(user_input)
+
+        # Async/safe save to Supabase recommendation_history
+        try:
+            if is_supabase_configured() and response.top_recommendation:
+                top = response.top_recommendation
+                req = response.required_barrier
+                sl = top.shelf_life_prediction
+                cost = top.cost_breakdown
+                sust = top.sustainability_indicator
+
+                history_record = {
+                    "user_email": "user@packsmart.ai",
+                    "food_id": user_input.food_id or "custom",
+                    "food_name": user_input.food_name or user_input.food_id or "Custom Commodity",
+                    "category": user_input.category,
+                    "input_conditions": user_input.model_dump(),
+                    "recommended_material_id": top.material_id,
+                    "recommended_material_name": top.name,
+                    "overall_score": float(round(top.overall_score, 2)),
+                    "ml_suitability_score": float(round(top.ml_suitability_score, 2)),
+                    "recommended_gauge_um": float(round(getattr(top, "recommended_thickness_um", 50.0), 1)),
+                    "target_otr_max": float(round(req.target_otr_max, 2)) if req and req.target_otr_max is not None else None,
+                    "actual_otr": float(round(top.barrier_check.actual_otr, 2)) if top.barrier_check and top.barrier_check.actual_otr is not None else None,
+                    "target_wvtr_max": float(round(req.target_wvtr_max, 2)) if req and req.target_wvtr_max is not None else None,
+                    "actual_wvtr": float(round(top.barrier_check.actual_wvtr, 2)) if top.barrier_check and top.barrier_check.actual_wvtr is not None else None,
+                    "barrier_status": top.barrier_check.overall_barrier_status if top.barrier_check else "PASS",
+                    "predicted_shelf_life_days": int(round(sl.predicted_shelf_life_days)) if sl else int(user_input.shelf_life_days),
+                    "limiting_factor": getattr(sl, "limiting_degradation_factor", "Moisture/Oxygen kinetics") if sl else "Moisture/Oxygen kinetics",
+                    "packaging_cost_per_pack": float(round(cost.packaging_cost_per_pack, 4)) if cost else 0.05,
+                    "expected_loss_cost_per_pack": float(round(getattr(cost, "expected_food_loss_cost_per_pack", 0.01), 4)) if cost else 0.01,
+                    "total_cost_per_pack": float(round(cost.total_cost_per_pack, 4)) if cost else 0.06,
+                    "sustainability_index": float(round(sust.sustainability_index, 2)) if sust else 75.0,
+                    "circularity_grade": sust.circularity_grade if sust else "B"
+                }
+                insert_record("recommendation_history", history_record)
+        except Exception as sb_err:
+            print(f"[Supabase History] Background save failed: {sb_err}")
+
+
+
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Recommendation pipeline failed: {str(e)}")
+
 
 
 @app.post("/api/calculate-barrier", response_model=Dict[str, Any])
@@ -275,17 +318,61 @@ def run_simulation(sim_input: SimulationInput):
         raise HTTPException(status_code=500, detail=f"Simulation failed: {str(e)}")
 
 
+@app.get("/api/history")
+def get_recommendation_history(limit: int = 25):
+    """Returns recent packaging analyses from Supabase recommendation_history table."""
+    try:
+        if is_supabase_configured():
+            records = fetch_table("recommendation_history", f"order=created_at.desc&limit={limit}")
+            if records is not None:
+                return records
+    except Exception as e:
+        print(f"[Supabase History] Query error: {e}")
+    return []
+
+
 @app.get("/api/materials")
 def list_materials():
-    """Returns all available packaging materials with technical ASTM specifications."""
+    """Returns all available packaging materials with technical ASTM specifications from Supabase or catalog."""
+    try:
+        if is_supabase_configured():
+            db_mats = fetch_table("packaging_materials", "order=nominal_otr.asc")
+            if db_mats and len(db_mats) > 0:
+                return db_mats
+    except Exception as e:
+        print(f"[Materials] Supabase query fallback: {e}")
     return list(PACKAGING_MATERIALS.values())
 
 
 @app.get("/api/foods")
 def list_foods():
-    """Returns reference food catalog."""
-    from .data.food_dataset import generate_training_dataset
-    # Standard food presets
+    """Returns reference food catalog from Supabase food_presets or built-in presets."""
+    try:
+        if is_supabase_configured():
+            db_foods = fetch_table("food_presets", "order=name.asc")
+            if db_foods and len(db_foods) > 0:
+                return [
+                    {
+                        "id": f["id"],
+                        "name": f["name"],
+                        "category": f["category"],
+                        "moisture": float(f["moisture_pct"]),
+                        "fat": float(f["fat_pct"]),
+                        "ph": float(f["ph"]),
+                        "respiration": f["respiration_rate"],
+                        "storage": f["storage_type"],
+                        "shelf": int(f["shelf_life_days"]),
+                        "temperature": float(f.get("opt_temp_c", 25.0)),
+                        "humidity": float(f.get("opt_rh_pct", 60.0)),
+                        "package_weight": float(f.get("package_weight_g", 250.0))
+                    }
+                    for f in db_foods
+                ]
+    except Exception as e:
+        print(f"[Foods] Supabase query fallback: {e}")
+
+    # Standard food presets fallback
+
     return [
         {
             "id": "tomato",

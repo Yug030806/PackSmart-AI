@@ -87,3 +87,24 @@ def insert_record(table_name: str, record: Dict[str, Any], use_service_key: bool
     except Exception as e:
         print(f"[Supabase Client] Failed to insert into {table_name}: {e}")
         return None
+
+
+def update_record(table_name: str, match_field: str, match_val: str, updates: Dict[str, Any], use_service_key: bool = True) -> Optional[Dict[str, Any]]:
+    """Updates record(s) matching match_field=match_val in a Supabase table."""
+    if not is_supabase_configured():
+        return None
+        
+    url = f"{SUPABASE_URL}/rest/v1/{table_name}?{match_field}=eq.{match_val}"
+    payload = json.dumps(updates).encode("utf-8")
+    req = urllib.request.Request(url, data=payload, headers=_get_headers(use_service_key), method="PATCH")
+    try:
+        with urllib.request.urlopen(req, timeout=5, context=_get_ssl_context()) as response:
+            raw = response.read().decode()
+            if not raw:
+                return {"status": "updated"}
+            data = json.loads(raw)
+            return data[0] if isinstance(data, list) and len(data) > 0 else data
+    except Exception as e:
+        print(f"[Supabase Client] Failed to update {table_name}: {e}")
+        return None
+

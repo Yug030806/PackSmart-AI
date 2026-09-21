@@ -15,6 +15,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from .schemas import UserProfile, LoginResponse, SystemLogEntry, UserManagementUpdate
+from .supabase_client import is_supabase_configured, fetch_table, insert_record, update_record
 
 # Role hierarchy & definitions
 ROLE_CONFIG = {
@@ -156,9 +157,9 @@ AUDIT_LOGS: List[Dict[str, Any]] = [
 
 
 def log_event(user_email: str, user_role: str, action: str, category: str, status: str, details: str):
-    """Appends an audit log entry."""
+    """Appends an audit log entry to memory and Supabase table system_audit_logs."""
     entry = {
-        "id": f"log-{uuid.uuid4().hex[:6]}",
+        "id": f"log-{uuid.uuid4().hex[:8]}",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "user_email": user_email,
         "user_role": user_role,
@@ -170,6 +171,13 @@ def log_event(user_email: str, user_role: str, action: str, category: str, statu
     AUDIT_LOGS.insert(0, entry)
     if len(AUDIT_LOGS) > 100:
         AUDIT_LOGS.pop()
+
+    try:
+        if is_supabase_configured():
+            insert_record("system_audit_logs", entry)
+    except Exception as e:
+        print(f"[Supabase Audit Log] Failed to insert log: {e}")
+
 
 
 def authenticate_user(email: str, password: str, requested_role: Optional[str] = None) -> LoginResponse:
@@ -233,7 +241,31 @@ def authenticate_user(email: str, password: str, requested_role: Optional[str] =
 
 
 def list_all_users() -> List[UserProfile]:
-    """Returns all users in the system."""
+    """Returns all users in the system, prioritizing live Supabase profiles."""
+    try:
+        if is_supabase_configured():
+            sb_profiles = fetch_table("profiles", "order=created_at.asc")
+            if sb_profiles and len(sb_profiles) > 0:
+                results = []
+                for p in sb_profiles:
+                    r_key = p.get("role", "user")
+                    role_meta = ROLE_CONFIG.get(r_key, ROLE_CONFIG["user"])
+                    results.append(UserProfile(
+                        id=p.get("id"),
+                        name=p.get("name", "User"),
+                        email=p.get("email"),
+                        role=r_key,
+                        access_level=p.get("access_level", role_meta["access_level"]),
+                        role_title=p.get("role_title", role_meta["title"]),
+                        badge_icon=p.get("badge_icon", role_meta["badge_icon"]),
+                        permissions=p.get("permissions") or role_meta["permissions"],
+                        status=p.get("status", "Active"),
+                        created_at=str(p.get("created_at", ""))
+                    ))
+                return results
+    except Exception as e:
+        print(f"[Auth] Supabase profile fetch fallback: {e}")
+
     res = []
     for u in USERS_DB.values():
         role_meta = ROLE_CONFIG.get(u["role"], ROLE_CONFIG["user"])
@@ -253,7 +285,10 @@ def list_all_users() -> List[UserProfile]:
 
 
 def update_user_role(update: UserManagementUpdate) -> Optional[UserProfile]:
-    """Updates a user's role or status."""
+    """Updates a user's role or status in memory and Supabase profiles table."""
+    updated_profile = None
+
+    # Check and update in memory
     for email, u in USERS_DB.items():
         if u["id"] == update.user_id:
             if update.role and update.role in ROLE_CONFIG:
@@ -264,15 +299,7 @@ def update_user_role(update: UserManagementUpdate) -> Optional[UserProfile]:
                 u["name"] = update.name
             
             role_meta = ROLE_CONFIG.get(u["role"], ROLE_CONFIG["user"])
-            log_event(
-                user_email="admin@packsmart.ai",
-                user_role="Super Admin",
-                action="USER_ROLE_UPDATE",
-                category="Administration",
-                status="SUCCESS",
-                details=f"Updated user {u['email']} to role {role_meta['title']} ({role_meta['access_level']})."
-            )
-            return UserProfile(
+            updated_profile = UserProfile(
                 id=u["id"],
                 name=u["name"],
                 email=u["email"],
@@ -284,11 +311,63 @@ def update_user_role(update: UserManagementUpdate) -> Optional[UserProfile]:
                 status=u["status"],
                 created_at=u["created_at"]
             )
-    return None
+            break
+
+    # Also update in Supabase
+    try:
+        if is_supabase_configured():
+            payload = {}
+            if update.role and update.role in ROLE_CONFIG:
+                role_meta = ROLE_CONFIG[update.role]
+                payload["role"] = update.role
+                payload["role_title"] = role_meta["title"]
+                payload["access_level"] = role_meta["access_level"]
+                payload["badge_icon"] = role_meta["badge_icon"]
+                payload["permissions"] = role_meta["permissions"]
+            if update.status:
+                payload["status"] = update.status
+            if update.name:
+                payload["name"] = update.name
+
+            if payload:
+                update_record("profiles", "id", update.user_id, payload)
+    except Exception as e:
+        print(f"[Auth] Supabase profile update failed: {e}")
+
+    if updated_profile:
+        log_event(
+            user_email="admin@packsmart.ai",
+            user_role="Super Admin",
+            action="USER_ROLE_UPDATE",
+            category="Administration",
+            status="SUCCESS",
+            details=f"Updated user ID {update.user_id} to {updated_profile.role_title} ({updated_profile.access_level})."
+        )
+    return updated_profile
 
 
 def get_system_audit_logs() -> List[SystemLogEntry]:
-    """Returns the latest system audit logs."""
+    """Returns the latest system audit logs from Supabase or fallback store."""
+    try:
+        if is_supabase_configured():
+            sb_logs = fetch_table("system_audit_logs", "order=timestamp.desc&limit=50")
+            if sb_logs:
+                return [
+                    SystemLogEntry(
+                        id=l.get("id", f"log-{i}"),
+                        timestamp=str(l.get("timestamp", "")),
+                        user_email=l.get("user_email", ""),
+                        user_role=l.get("user_role", ""),
+                        action=l.get("action", ""),
+                        category=l.get("category", ""),
+                        status=l.get("status", "SUCCESS"),
+                        details=l.get("details", "")
+                    )
+                    for i, l in enumerate(sb_logs)
+                ]
+    except Exception as e:
+        print(f"[Auth] Supabase audit log query error: {e}")
+
     return [
         SystemLogEntry(
             id=l["id"],
@@ -302,3 +381,4 @@ def get_system_audit_logs() -> List[SystemLogEntry]:
         )
         for l in AUDIT_LOGS
     ]
+
