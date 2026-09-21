@@ -1,22 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Check, Sparkles, Sliders, ChevronDown, ChevronUp } from "lucide-react";
 import { FOODS, POPULAR_FOOD_TAGS } from "../../data/materials";
 
-export function Step1Food({ input, setInput, onSelectFood, onNext }) {
+export function Step1Food({ input, setInput, validationErrors = {}, onSelectFood, onNext }) {
+  const [foodsMap, setFoodsMap] = useState(FOODS);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [showAdvancedProps, setShowAdvancedProps] = useState(false);
 
+  // Auto-expand advanced properties panel if there are biochemical validation errors
+  useEffect(() => {
+    if (validationErrors.moisture || validationErrors.fat || validationErrors.composition || validationErrors.ph) {
+      setShowAdvancedProps(true);
+    }
+  }, [validationErrors]);
+
+  // Fetch foods catalog from backend / Supabase
+  useEffect(() => {
+    fetch("/api/foods")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const map = { ...FOODS };
+          data.forEach(item => {
+            map[item.id] = {
+              name: item.name,
+              category: item.category,
+              moisture: item.moisture,
+              fat: item.fat,
+              ph: item.ph,
+              respiration: item.respiration,
+              storage: item.storage,
+              shelf: item.shelf,
+              temperature: item.temperature,
+              humidity: item.humidity,
+              packageWeight: item.package_weight
+            };
+          });
+          setFoodsMap(map);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const categories = ["All", "Snacks", "Bakery / snacks", "Fresh produce", "Dairy", "Grains"];
 
-  const filteredFoods = Object.entries(FOODS).filter(([key, f]) => {
+  const filteredFoods = Object.entries(foodsMap).filter(([key, f]) => {
     const matchesSearch = f.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           f.category.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === "All" || f.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
-  const selectedFoodObj = FOODS[input.food] || {
+  const selectedFoodObj = foodsMap[input.food] || {
     name: input.food_name || input.food,
     category: input.category,
     moisture: input.moisture,
@@ -169,45 +205,84 @@ export function Step1Food({ input, setInput, onSelectFood, onNext }) {
         </div>
 
         {showAdvancedProps ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "14px", paddingTop: "14px", borderTop: "1px solid var(--border-subtle)" }}>
-            <div className="field">
-              <label>Moisture Content (%)</label>
-              <input
-                type="number"
-                step="0.1"
-                value={input.moisture}
-                onChange={e => setInput(v => ({ ...v, moisture: Number(e.target.value) }))}
-              />
-            </div>
-            <div className="field">
-              <label>Fat / Lipid Content (%)</label>
-              <input
-                type="number"
-                step="0.1"
-                value={input.fat}
-                onChange={e => setInput(v => ({ ...v, fat: Number(e.target.value) }))}
-              />
-            </div>
-            <div className="field">
-              <label>pH Acidity Level</label>
-              <input
-                type="number"
-                step="0.1"
-                value={input.ph}
-                onChange={e => setInput(v => ({ ...v, ph: Number(e.target.value) }))}
-              />
-            </div>
-            <div className="field">
-              <label>Respiration Rate</label>
-              <select
-                value={input.respiration}
-                onChange={e => setInput(v => ({ ...v, respiration: e.target.value }))}
-              >
-                <option value="None">None (Dry/Processed)</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High (Fresh Produce)</option>
-              </select>
+          <div>
+            {validationErrors.composition && (
+              <div style={{
+                background: "rgba(240, 68, 56, 0.12)",
+                border: "1px solid rgba(240, 68, 56, 0.3)",
+                borderRadius: "var(--radius-sm)",
+                padding: "8px 12px",
+                fontSize: "12px",
+                color: "#fda29b",
+                marginBottom: "12px"
+              }}>
+                ⚠️ <b>Composition Error:</b> {validationErrors.composition}
+              </div>
+            )}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "14px", paddingTop: "14px", borderTop: "1px solid var(--border-subtle)" }}>
+              <div className="field">
+                <label>Moisture Content (%)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={input.moisture}
+                  style={{
+                    borderColor: (validationErrors.moisture || validationErrors.composition) ? "#f04438" : undefined
+                  }}
+                  onChange={e => setInput(v => ({ ...v, moisture: Number(e.target.value) }))}
+                />
+                {validationErrors.moisture && (
+                  <span style={{ color: "#f04438", fontSize: "11px", marginTop: "4px", display: "block" }}>
+                    {validationErrors.moisture}
+                  </span>
+                )}
+              </div>
+              <div className="field">
+                <label>Fat / Lipid Content (%)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={input.fat}
+                  style={{
+                    borderColor: (validationErrors.fat || validationErrors.composition) ? "#f04438" : undefined
+                  }}
+                  onChange={e => setInput(v => ({ ...v, fat: Number(e.target.value) }))}
+                />
+                {validationErrors.fat && (
+                  <span style={{ color: "#f04438", fontSize: "11px", marginTop: "4px", display: "block" }}>
+                    {validationErrors.fat}
+                  </span>
+                )}
+              </div>
+              <div className="field">
+                <label>pH Acidity Level</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={input.ph}
+                  style={{
+                    borderColor: validationErrors.ph ? "#f04438" : undefined
+                  }}
+                  onChange={e => setInput(v => ({ ...v, ph: Number(e.target.value) }))}
+                />
+                {validationErrors.ph && (
+                  <span style={{ color: "#f04438", fontSize: "11px", marginTop: "4px", display: "block" }}>
+                    {validationErrors.ph}
+                  </span>
+                )}
+              </div>
+              <div className="field">
+                <label>Respiration Rate</label>
+                <select
+                  value={input.respiration}
+                  onChange={e => setInput(v => ({ ...v, respiration: e.target.value }))}
+                >
+                  <option value="None">None (Dry/Processed)</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High (Fresh Produce)</option>
+                </select>
+              </div>
             </div>
           </div>
         ) : (

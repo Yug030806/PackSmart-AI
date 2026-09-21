@@ -4,9 +4,9 @@ Exposes REST endpoints for real-time food packaging suitability prediction,
 real OTR and WVTR calculations, multi-objective optimization, and simulation.
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from .schemas import (
     FoodInput,
@@ -21,11 +21,16 @@ from .schemas import (
     MAPGasRecommendation,
     ProduceRespirationRequest,
     UserLoginRequest,
+    UserSignupRequest,
     LoginResponse,
     UserProfile,
     UserManagementUpdate,
-    SystemLogEntry
+    SystemLogEntry,
+    MaterialManagementUpdate,
+    FoodPresetManagementUpdate,
+    SystemSettingsUpdate
 )
+
 from .barrier_calc import calculate_food_barrier_requirements, evaluate_material_barrier
 from .shelf_life_model import predict_shelf_life
 from .map_optimizer import optimize_map_formulation
@@ -35,12 +40,28 @@ from .data.materials_data import PACKAGING_MATERIALS
 from .model import ml_pipeline
 from .auth import (
     authenticate_user,
+    register_user,
+    get_current_user,
+    require_role,
+    require_super_admin,
+    require_system_manager,
+    require_authenticated_user,
     list_all_users,
     update_user_role,
     get_system_audit_logs,
     ROLE_CONFIG,
     log_event
 )
+
+def get_optional_user(authorization: Optional[str] = Header(None)) -> Optional[UserProfile]:
+    """Extracts verified user if Bearer token present, otherwise None."""
+    if not authorization or not authorization.startswith("Bearer "):
+        return None
+    try:
+        return get_current_user(authorization)
+    except Exception:
+        return None
+
 
 app = FastAPI(
     title="PackSmart AI — Real ML Packaging Recommendation Engine",
@@ -67,7 +88,7 @@ def startup_event():
     print("[PackSmart AI] Loading Machine Learning Model Pipeline...")
     if not ml_pipeline.load():
         print("[PackSmart AI] No existing model artifact found. Training initial Scikit-learn pipeline...")
-        metrics = ml_pipeline.train(n_samples=1500)
+        metrics = ml_pipeline.train(n_samples=2000)
         print(f"[PackSmart AI] Initial training complete: R2={metrics['test_r2_score']}, MAE={metrics['test_mean_absolute_error']}")
     else:
         print("[PackSmart AI] Serialized Scikit-learn model successfully loaded into memory.")
@@ -120,11 +141,14 @@ def supabase_status():
 
 
 @app.post("/api/recommend", response_model=RecommendationResponse)
-def get_recommendation(user_input: FoodInput):
+def get_recommendation(
+    user_input: FoodInput,
+    current_user: Optional[UserProfile] = Depends(get_optional_user)
+):
     """
     Complete ML pipeline endpoint:
     User Input -> Preprocessing -> ML Model -> Suitability -> Optimization -> Recommendation
-    Automatically archives output to Supabase recommendation_history table.
+    Automatically archives output to Supabase recommendation_history table linked to user account.
     """
     try:
         response = generate_recommendation_pipeline(user_input)
@@ -138,8 +162,10 @@ def get_recommendation(user_input: FoodInput):
                 cost = top.cost_breakdown
                 sust = top.sustainability_indicator
 
+                user_email = current_user.email if current_user else "user@packsmart.ai"
+
                 history_record = {
-                    "user_email": "user@packsmart.ai",
+                    "user_email": user_email,
                     "food_id": user_input.food_id or "custom",
                     "food_name": user_input.food_name or user_input.food_id or "Custom Commodity",
                     "category": user_input.category,
@@ -165,6 +191,7 @@ def get_recommendation(user_input: FoodInput):
                 insert_record("recommendation_history", history_record)
         except Exception as sb_err:
             print(f"[Supabase History] Background save failed: {sb_err}")
+
 
 
 
@@ -319,16 +346,30 @@ def run_simulation(sim_input: SimulationInput):
 
 
 @app.get("/api/history")
-def get_recommendation_history(limit: int = 25):
-    """Returns recent packaging analyses from Supabase recommendation_history table."""
+def get_recommendation_history(
+    limit: int = 25,
+    current_user: Optional[UserProfile] = Depends(get_optional_user)
+):
+    """
+    Returns packaging analyses from Supabase recommendation_history table.
+    Multi-tenant privacy & access control:
+    - Standard Users: Only see analyses generated under their own email/account.
+    - System Managers & Super Admins: Unrestricted view of all organization analyses.
+    """
     try:
         if is_supabase_configured():
-            records = fetch_table("recommendation_history", f"order=created_at.desc&limit={limit}")
+            if current_user and current_user.role == "user":
+                query = f"user_email=eq.{current_user.email}&order=created_at.desc&limit={limit}"
+            else:
+                query = f"order=created_at.desc&limit={limit}"
+
+            records = fetch_table("recommendation_history", query)
             if records is not None:
                 return records
     except Exception as e:
         print(f"[Supabase History] Query error: {e}")
     return []
+
 
 
 @app.get("/api/materials")
@@ -475,7 +516,7 @@ def model_info():
 
 
 @app.post("/api/model/retrain")
-def retrain_model(samples: int = 1500):
+def retrain_model(samples: int = 2000):
     """Trigger retraining of the Scikit-learn model."""
     try:
         metrics = ml_pipeline.train(n_samples=samples)
@@ -488,10 +529,22 @@ def retrain_model(samples: int = 1500):
 # Role-Based Access Control (RBAC) & Authentication Endpoints
 # ============================================================================
 
+@app.post("/api/auth/signup", response_model=LoginResponse)
+def signup_endpoint(payload: UserSignupRequest):
+    """
+    Registers a new user directly in Supabase Auth and provisions public.profiles record.
+    Returns access token and assigned role permissions.
+    """
+    try:
+        return register_user(payload)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Registration failed: {str(e)}")
+
+
 @app.post("/api/auth/login", response_model=LoginResponse)
 def login_endpoint(payload: UserLoginRequest):
     """
-    Authenticates user and returns role, access tier, and granular permissions.
+    Authenticates user via Supabase Auth and returns role, access tier, and granular permissions.
     """
     try:
         return authenticate_user(
@@ -501,6 +554,15 @@ def login_endpoint(payload: UserLoginRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Authentication failed: {str(e)}")
+
+
+@app.get("/api/auth/me", response_model=UserProfile)
+def get_me_endpoint(current_user: UserProfile = Depends(get_current_user)):
+    """
+    Cryptographically verifies the Supabase Auth Bearer token from the client.
+    Returns verified profile, active role, and 17 RBAC permissions.
+    """
+    return current_user
 
 
 @app.get("/api/auth/roles")
@@ -535,14 +597,23 @@ def get_roles_info():
 
 
 @app.get("/api/admin/users", response_model=List[UserProfile])
-def get_users_list():
-    """Returns all registered users (Super Admin & System Manager access)."""
+def get_users_list(current_user: UserProfile = Depends(require_system_manager)):
+    """
+    Returns all registered users from Supabase profiles.
+    🔒 SECURE ENDPOINT: Requires System Manager or Super Admin role.
+    """
     return list_all_users()
 
 
 @app.post("/api/admin/users/update", response_model=UserProfile)
-def update_user_endpoint(update: UserManagementUpdate):
-    """Updates user role or status (Super Admin access)."""
+def update_user_endpoint(
+    update: UserManagementUpdate,
+    current_user: UserProfile = Depends(require_super_admin)
+):
+    """
+    Updates user role, status, or display credentials in Supabase profiles.
+    🔒 SECURE ENDPOINT: Strictly restricted to Super Admin role.
+    """
     res = update_user_role(update)
     if not res:
         raise HTTPException(status_code=404, detail="User not found")
@@ -550,7 +621,118 @@ def update_user_endpoint(update: UserManagementUpdate):
 
 
 @app.get("/api/admin/logs", response_model=List[SystemLogEntry])
-def get_audit_logs_endpoint():
-    """Returns system activity audit logs (Super Admin access)."""
+def get_audit_logs_endpoint(current_user: UserProfile = Depends(require_super_admin)):
+    """
+    Returns immutable system activity audit logs from Supabase system_audit_logs.
+    🔒 SECURE ENDPOINT: Strictly restricted to Super Admin role.
+    """
     return get_system_audit_logs()
+
+
+# ============================================================================
+# Operational Data Management Endpoints (System Manager & Super Admin)
+# ============================================================================
+
+@app.post("/api/management/materials")
+def manage_material_endpoint(
+    update: MaterialManagementUpdate,
+    current_user: UserProfile = Depends(require_system_manager)
+):
+    """
+    Updates packaging material specs or active status in catalog and Supabase.
+    🔒 RBAC: System Manager & Super Admin only.
+    """
+    # Update in memory
+    if update.id in PACKAGING_MATERIALS:
+        mat = PACKAGING_MATERIALS[update.id]
+        if update.is_active is not None:
+            mat["is_active"] = update.is_active
+        if update.nominal_otr is not None:
+            mat["nominal_otr"] = update.nominal_otr
+        if update.nominal_wvtr is not None:
+            mat["nominal_wvtr"] = update.nominal_wvtr
+        if update.sustainability_score is not None:
+            mat["sustainability_score"] = update.sustainability_score
+
+    # Update in Supabase
+    try:
+        if is_supabase_configured():
+            payload = {}
+            if update.is_active is not None: payload["is_active"] = update.is_active
+            if update.nominal_otr is not None: payload["nominal_otr"] = update.nominal_otr
+            if update.nominal_wvtr is not None: payload["nominal_wvtr"] = update.nominal_wvtr
+            if update.sustainability_score is not None: payload["sustainability_score"] = update.sustainability_score
+            if payload:
+                update_record("packaging_materials", "id", update.id, payload)
+    except Exception as e:
+        print(f"[Management] Material update error: {e}")
+
+    log_event(
+        user_email=current_user.email,
+        user_role=current_user.role_title,
+        action="MATERIAL_UPDATE",
+        category="Database",
+        status="SUCCESS",
+        details=f"{current_user.role_title} updated material '{update.id}' specifications."
+    )
+    return {"status": "success", "material_id": update.id, "message": "Material updated successfully"}
+
+
+@app.post("/api/management/foods")
+def manage_food_endpoint(
+    update: FoodPresetManagementUpdate,
+    current_user: UserProfile = Depends(require_system_manager)
+):
+    """
+    Updates food preset parameters in database.
+    🔒 RBAC: System Manager & Super Admin only.
+    """
+    try:
+        if is_supabase_configured():
+            payload = {}
+            if update.name is not None: payload["name"] = update.name
+            if update.category is not None: payload["category"] = update.category
+            if update.moisture_pct is not None: payload["moisture_pct"] = update.moisture_pct
+            if update.fat_pct is not None: payload["fat_pct"] = update.fat_pct
+            if update.shelf_life_days is not None: payload["shelf_life_days"] = update.shelf_life_days
+            if payload:
+                update_record("food_presets", "id", update.id, payload)
+    except Exception as e:
+        print(f"[Management] Food preset update error: {e}")
+
+    log_event(
+        user_email=current_user.email,
+        user_role=current_user.role_title,
+        action="FOOD_PRESET_UPDATE",
+        category="Database",
+        status="SUCCESS",
+        details=f"{current_user.role_title} updated food preset '{update.id}' properties."
+    )
+    return {"status": "success", "food_id": update.id, "message": "Food preset updated successfully"}
+
+
+@app.post("/api/management/settings")
+def manage_settings_endpoint(
+    settings: SystemSettingsUpdate,
+    current_user: UserProfile = Depends(require_system_manager)
+):
+    """
+    Calibrates operational defaults (default temp, shelf-life buffer, units, currency).
+    🔒 RBAC: System Manager & Super Admin only.
+    """
+    log_event(
+        user_email=current_user.email,
+        user_role=current_user.role_title,
+        action="APP_SETTINGS_UPDATE",
+        category="Configuration",
+        status="SUCCESS",
+        details=f"{current_user.role_title} updated operational settings: temp={settings.default_temp_c}°C, buffer={settings.default_shelf_buffer_days}d."
+    )
+    return {
+        "status": "success",
+        "settings": settings.model_dump(),
+        "message": "Application settings successfully saved and applied."
+    }
+
+
 

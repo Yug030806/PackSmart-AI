@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 
-export function Step2Conditions({ input, setInput, onBack, onNext }) {
+export function Step2Conditions({ input, setInput, validationErrors = {}, onBack, onNext }) {
   const set = (k, v) => setInput(x => ({ ...x, [k]: v }));
 
   const transportOptions = [
@@ -84,6 +84,11 @@ export function Step2Conditions({ input, setInput, onBack, onNext }) {
               <span>25°C (Ambient Standard)</span>
               <span>45°C (Hot Desert)</span>
             </div>
+            {validationErrors.temperature && (
+              <span style={{ color: "#f04438", fontSize: "11px", marginTop: "4px", display: "block" }}>
+                {validationErrors.temperature}
+              </span>
+            )}
           </div>
 
           {/* Relative Humidity Slider */}
@@ -107,10 +112,20 @@ export function Step2Conditions({ input, setInput, onBack, onNext }) {
               <span>60% (Standard ASTM)</span>
               <span>95% (Tropical Saturation)</span>
             </div>
+            {validationErrors.humidity && (
+              <span style={{ color: "#f04438", fontSize: "11px", marginTop: "4px", display: "block" }}>
+                {validationErrors.humidity}
+              </span>
+            )}
           </div>
 
           {/* Required Shelf Life with [-] [+] Interactive Counter */}
-          <div style={{ padding: "14px 16px", background: "var(--bg-input)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
+          <div style={{
+            padding: "14px 16px",
+            background: "var(--bg-input)",
+            borderRadius: "var(--radius-md)",
+            border: validationErrors.shelf ? "1px solid #f04438" : "1px solid var(--border-subtle)"
+          }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <span style={{ fontSize: "12px", color: "var(--text-secondary)", display: "block" }}>
@@ -141,6 +156,11 @@ export function Step2Conditions({ input, setInput, onBack, onNext }) {
                 </button>
               </div>
             </div>
+            {validationErrors.shelf && (
+              <span style={{ color: "#f04438", fontSize: "11px", marginTop: "6px", display: "block" }}>
+                {validationErrors.shelf}
+              </span>
+            )}
           </div>
 
           {/* Net Package Weight & Storage Type */}
@@ -150,8 +170,16 @@ export function Step2Conditions({ input, setInput, onBack, onNext }) {
               <input
                 type="number"
                 value={input.packageWeight}
+                style={{
+                  borderColor: validationErrors.packageWeight ? "#f04438" : undefined
+                }}
                 onChange={e => set("packageWeight", Number(e.target.value))}
               />
+              {validationErrors.packageWeight && (
+                <span style={{ color: "#f04438", fontSize: "11px", marginTop: "4px", display: "block" }}>
+                  {validationErrors.packageWeight}
+                </span>
+              )}
             </div>
             <div className="field" style={{ margin: 0 }}>
               <label>Storage Environment</label>

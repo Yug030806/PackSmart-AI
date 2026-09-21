@@ -31,7 +31,7 @@ class PackagingMLPipeline:
         self.training_metrics: Dict[str, Any] = {}
         self.feature_importances: Dict[str, float] = {}
 
-    def train(self, n_samples: int = 1500) -> Dict[str, Any]:
+    def train(self, n_samples: int = 2000) -> Dict[str, Any]:
         """
         Trains the Scikit-learn MultiOutput Random Forest model on scientific packaging data.
         """
@@ -64,13 +64,20 @@ class PackagingMLPipeline:
         }
 
         self.training_metrics = {
-            "algorithm": "Scikit-learn MultiOutputRegressor (RandomForest)",
+            "model": "Random Forest",
+            "algorithm": "MultiOutput Random Forest Regressor",
             "n_estimators": 100,
-            "training_samples": len(X_train),
-            "test_samples": len(X_test),
+            "training_samples": f"{n_samples} prototype samples",
+            "sample_count": n_samples,
+            "train_split": len(X_train),
+            "test_split": len(X_test),
+            "input_features": "Food + packaging + storage parameters",
+            "outputs": "Packaging suitability",
             "test_r2_score": round(overall_r2, 4),
             "test_mean_absolute_error": round(overall_mae, 4),
-            "materials_evaluated": len(self.material_keys)
+            "materials_evaluated": len(self.material_keys),
+            "dataset_classification": "Prototype / Illustrative Synthetic Dataset",
+            "prototype_disclaimer": "PROTOTYPE / ILLUSTRATIVE: Trained on 2,000 synthetic prototype samples based on ASTM permeation benchmarks and kinetic equations. Not experimentally validated against empirical food degradation trials."
         }
 
         # Save artifact to disk

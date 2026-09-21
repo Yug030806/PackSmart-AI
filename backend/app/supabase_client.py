@@ -108,3 +108,71 @@ def update_record(table_name: str, match_field: str, match_val: str, updates: Di
         print(f"[Supabase Client] Failed to update {table_name}: {e}")
         return None
 
+
+def supabase_auth_login(email: str, password: str) -> Optional[Dict[str, Any]]:
+    """Authenticates user via Supabase Auth POST /auth/v1/token?grant_type=password."""
+    if not is_supabase_configured():
+        return None
+    url = f"{SUPABASE_URL}/auth/v1/token?grant_type=password"
+    payload = json.dumps({"email": email.strip().lower(), "password": password}).encode("utf-8")
+    headers = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Content-Type": "application/json"
+    }
+    req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=6, context=_get_ssl_context()) as response:
+            return json.loads(response.read().decode())
+    except urllib.error.HTTPError as he:
+        err_msg = he.read().decode()
+        print(f"[Supabase Auth Login Error {he.code}]: {err_msg}")
+        return None
+    except Exception as e:
+        print(f"[Supabase Auth Login Exception]: {e}")
+        return None
+
+
+def supabase_auth_verify_token(token: str) -> Optional[Dict[str, Any]]:
+    """Verifies a JWT access token with Supabase Auth GET /auth/v1/user."""
+    if not is_supabase_configured() or not token:
+        return None
+    clean_token = token.replace("Bearer ", "").strip()
+    url = f"{SUPABASE_URL}/auth/v1/user"
+    headers = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": f"Bearer {clean_token}"
+    }
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=5, context=_get_ssl_context()) as response:
+            return json.loads(response.read().decode())
+    except Exception:
+        # Token expired, invalid or unrecognized
+        return None
+
+
+def supabase_auth_admin_create_user(email: str, password: str, metadata: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+    """Creates a confirmed user in Supabase Auth via Admin API."""
+    if not is_supabase_configured() or not SUPABASE_SERVICE_ROLE_KEY:
+        return None
+    url = f"{SUPABASE_URL}/auth/v1/admin/users"
+    payload = {
+        "email": email.strip().lower(),
+        "password": password,
+        "email_confirm": True,
+        "user_metadata": metadata or {}
+    }
+    headers = {
+        "apikey": SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+        "Content-Type": "application/json"
+    }
+    req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=6, context=_get_ssl_context()) as response:
+            return json.loads(response.read().decode())
+    except Exception as e:
+        print(f"[Supabase Auth Admin Create User Error]: {e}")
+        return None
+
+

@@ -215,7 +215,7 @@ def evaluate_material_barrier(
     Calculates actual OTR and WVTR of a material at specific thickness and storage temperature.
     Performs physical PASS / FAIL verification against food barrier requirements.
     """
-    mat = PACKAGING_MATERIALS[material_id]
+    mat = PACKAGING_MATERIALS.get(material_id, PACKAGING_MATERIALS.get("metalized", list(PACKAGING_MATERIALS.values())[0]))
     nom_thickness = float(mat["nominal_thickness_um"])
     nom_otr = float(mat["nominal_otr"])
     nom_wvtr = float(mat["nominal_wvtr"])

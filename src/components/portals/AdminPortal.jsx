@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { INITIAL_USERS, INITIAL_LOGS, PERMISSIONS_MATRIX } from "../../data/materials";
 
-export function AdminPortal({ currentUser, onNavigate, onQuickSwitch }) {
+export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken }) {
   const [activeTab, setActiveTab] = useState("users");
   const [users, setUsers] = useState(INITIAL_USERS);
   const [logs, setLogs] = useState(INITIAL_LOGS);
@@ -24,6 +24,26 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch }) {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
   };
+
+  React.useEffect(() => {
+    if (!isSuperAdmin) return;
+    const headers = {};
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
+    fetch("/api/admin/users", { headers })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setUsers(data);
+      })
+      .catch(() => {});
+
+    fetch("/api/admin/logs", { headers })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setLogs(data);
+      })
+      .catch(() => {});
+  }, [authToken, isSuperAdmin]);
 
   if (!isSuperAdmin) {
     return (
@@ -73,17 +93,22 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch }) {
     setLogs(prev => [newLog, ...prev]);
     showNotification(`User role updated to ${roleLabels[newRole]}. Audit log generated.`);
 
+    const headers = { "Content-Type": "application/json" };
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
     fetch("/api/admin/users/update", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: updatedUser?.email, new_role: newRole, admin_email: currentUser?.email })
-    }).catch(() => {});
+      headers,
+      body: JSON.stringify({ user_id: userId, role: newRole })
+    }).catch(err => console.warn("Supabase user update error:", err));
   };
 
   const handleToggleStatus = (userId) => {
+    let targetStatus = "Active";
     setUsers(prev => prev.map(u => {
       if (u.id === userId) {
         const nextStatus = u.status === "Active" ? "Suspended" : "Active";
+        targetStatus = nextStatus;
         const newLog = {
           id: `log-${Date.now()}`,
           timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -98,7 +123,17 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch }) {
       return u;
     }));
     showNotification("User account status updated.");
+
+    const headers = { "Content-Type": "application/json" };
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
+    fetch("/api/admin/users/update", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ user_id: userId, status: targetStatus })
+    }).catch(err => console.warn("Supabase status update error:", err));
   };
+
 
   const handleAddUser = (e) => {
     e.preventDefault();

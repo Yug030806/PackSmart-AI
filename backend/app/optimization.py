@@ -46,7 +46,7 @@ def optimize_material_thickness(
     Finds the optimal minimum safe thickness within allowable manufacturing limits [t_min, t_max]
     that satisfies OTR and WVTR barrier thresholds, reducing unnecessary plastic use.
     """
-    mat = PACKAGING_MATERIALS[mat_id]
+    mat = PACKAGING_MATERIALS.get(mat_id, PACKAGING_MATERIALS.get("metalized", list(PACKAGING_MATERIALS.values())[0]))
     t_min, t_max = mat["thickness_range_um"]
     t_nom = float(mat["nominal_thickness_um"])
 
@@ -413,6 +413,76 @@ def run_multi_objective_optimization(
 
         map_strat = determine_map_strategy(inp.category, inp.respiration_rate, inp.fat_pct)
 
+        # Structured Explanation: "Why this material?"
+        reasons_list = []
+        why_dict = {}
+
+        # 1. Moisture protection
+        if barrier_check.wvtr_status == "PASS":
+            m_text = f"High moisture protection (WVTR: {barrier_check.actual_wvtr:.2f} g/m²·d ≤ limit {barrier_req.target_wvtr_max:.2f} g/m²·d)"
+            m_detail = f"High moisture protection: Water vapor transmission rate of {barrier_check.actual_wvtr:.2f} g/(m²·d) safely satisfies the permissible limit of ≤ {barrier_req.target_wvtr_max:.2f} g/(m²·d), preventing moisture gain and loss of crispness."
+        else:
+            m_text = f"Moderate moisture protection (WVTR: {barrier_check.actual_wvtr:.2f} g/m²·d exceeds target {barrier_req.target_wvtr_max:.2f} g/m²·d)"
+            m_detail = f"Moderate moisture protection: WVTR of {barrier_check.actual_wvtr:.2f} g/(m²·d) exceeds ideal target (≤ {barrier_req.target_wvtr_max:.2f} g/(m²·d))."
+        reasons_list.append(m_text)
+        why_dict["moisture_protection"] = m_detail
+
+        # 2. Oxygen barrier
+        if is_produce:
+            o_text = "Engineered produce respiration barrier (tuned to prevent hypoxia while slowing senescence)"
+            o_detail = "Engineered produce respiration barrier: Micro-permeable matrix balances O₂ consumption and gas replenishment to prevent anaerobic off-flavors."
+        elif barrier_check.otr_status == "PASS":
+            o_text = f"Good oxygen barrier (OTR: {barrier_check.actual_otr:.2f} cc/m²·d ≤ limit {barrier_req.target_otr_max:.2f} cc/m²·d)"
+            o_detail = f"Good oxygen barrier: Oxygen transmission rate of {barrier_check.actual_otr:.2f} cc/(m²·d·atm) suppresses lipid oxidation and off-flavor development (target ≤ {barrier_req.target_otr_max:.2f} cc)."
+        else:
+            o_text = f"Permeable oxygen profile (OTR: {barrier_check.actual_otr:.2f} cc/m²·d)"
+            o_detail = f"Permeable oxygen profile: OTR of {barrier_check.actual_otr:.2f} cc/(m²·d·atm)."
+        reasons_list.append(o_text)
+        why_dict["oxygen_barrier"] = o_detail
+
+        # 3. Suitable for required shelf life
+        if shelf_life_res.predicted_shelf_life_days >= inp.shelf_life_days:
+            s_text = f"Suitable for required shelf life ({shelf_life_res.predicted_shelf_life_days} days predicted vs {inp.shelf_life_days} days target)"
+            s_detail = f"Suitable for required shelf life: Delivers {shelf_life_res.predicted_shelf_life_days} days predicted longevity, exceeding the required {inp.shelf_life_days}-day target with a +{shelf_life_res.safety_margin_days}-day safety margin."
+        else:
+            s_text = f"Shelf life: {shelf_life_res.predicted_shelf_life_days} days predicted (near target {inp.shelf_life_days} days)"
+            s_detail = f"Shelf life horizon: Predicts {shelf_life_res.predicted_shelf_life_days} days of product freshness at {inp.temperature_c}°C."
+        reasons_list.append(s_text)
+        why_dict["shelf_life"] = s_detail
+
+        # 4. Suitable for transportation conditions
+        t_mode = inp.transport_mode or "Normal"
+        if t_mode == "Long distance":
+            t_text = "Suitable for transportation conditions (high tensile & puncture resistance for long distance freight)"
+            t_detail = "Suitable for transportation conditions: Enhanced mechanical puncture and flex-crack resistance withstands vibration and compression in long-distance freight."
+        elif t_mode == "Refrigerated":
+            t_text = "Suitable for transportation conditions (cold-chain condensation and embrittlement resistance)"
+            t_detail = "Suitable for transportation conditions: Resists condensation plasticization and maintains seal ductility throughout 2–8°C refrigerated cold chain."
+        elif t_mode == "High humidity":
+            t_text = "Suitable for transportation conditions (moisture-resistant seal integrity in tropical humidity)"
+            t_detail = "Suitable for transportation conditions: Hydrophobic multi-layer barrier averts moisture penetration during high-humidity and monsoon logistics."
+        else:
+            t_text = "Suitable for transportation conditions (durable seal integrity for standard distribution)"
+            t_detail = "Suitable for transportation conditions: Reliable seal strength, burst resistance, and structural stability for ambient distribution."
+        reasons_list.append(t_text)
+        why_dict["transportation"] = t_detail
+
+        # 5. Within selected budget
+        b_level = inp.budget_level or "Medium"
+        unit_cost = cost_breakdown.total_cost_per_pack
+        b_text = f"Within selected budget (${unit_cost:.3f}/pack aligned with '{b_level}' budget)"
+        b_detail = f"Within selected budget: Estimated total cost of ${unit_cost:.3f}/pack (Packaging: ${cost_breakdown.packaging_cost_per_pack:.3f} + Spoilage Loss: ${cost_breakdown.expected_food_loss_cost_per_pack:.3f}) matches your '{b_level}' economic target."
+        reasons_list.append(b_text)
+        why_dict["budget"] = b_detail
+
+        # 6. Acceptable sustainability score
+        sust_score = sustainability_indicator.sustainability_index
+        sust_grade = sustainability_indicator.circularity_grade
+        sust_text = f"Acceptable sustainability score ({sust_grade}, {sust_score:.0f}/100 Index)"
+        sust_detail = f"Acceptable sustainability score: Achieves {sust_grade} with a Sustainability Index of {sust_score:.0f}/100 and low carbon footprint of {carbon_g}g CO₂e per pack."
+        reasons_list.append(sust_text)
+        why_dict["sustainability"] = sust_detail
+
         ranked_list.append(OptimizedMaterialResult(
             material_id=mat_id,
             name=mat["name"],
@@ -433,7 +503,9 @@ def run_multi_objective_optimization(
             cost_breakdown=cost_breakdown,
             sustainability_indicator=sustainability_indicator,
             key_strengths=strengths if strengths else ["Baseline food contact compliance"],
-            potential_risks=risks if risks else ["No critical barrier violations observed"]
+            potential_risks=risks if risks else ["No critical barrier violations observed"],
+            recommendation_reasons=reasons_list,
+            why_this_material=why_dict
         ))
 
     # Sort by overall Pareto score descending

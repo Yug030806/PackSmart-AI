@@ -43,8 +43,9 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
 
       if (res && res.ok) {
         const data = await res.json();
-        onLogin(data.user);
+        onLogin(data.user, data.token);
         setSuccessMsg(`Welcome back, ${data.user.name}!`);
+
         setTimeout(() => {
           if (data.user.role === "super_admin") nav("admin");
           else if (data.user.role === "system_manager") nav("management");
@@ -55,7 +56,7 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
       }
     } catch {
       onQuickSwitch(role);
-      setSuccessMsg(`Signed in locally as ${role === "super_admin" ? "👑 Super Admin" : role === "system_manager" ? "🛠️ System Manager" : "👤 User"}`);
+      setSuccessMsg(`Signed in locally as ${role === "super_admin" ? " Super Admin" : role === "system_manager" ? " System Manager" : " User"}`);
       setTimeout(() => {
         if (role === "super_admin") nav("admin");
         else if (role === "system_manager") nav("management");
@@ -161,9 +162,9 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
             <div className="field">
               <label>Role / Access Tier</label>
               <select value={role} onChange={e => setRole(e.target.value)}>
-                <option value="super_admin">👑 Super Admin (Full System Access)</option>
-                <option value="system_manager">🛠️ System Manager (Management Access)</option>
-                <option value="user">👤 User (Basic Access)</option>
+                <option value="super_admin"> Super Admin (Full System Access)</option>
+                <option value="system_manager"> System Manager (Management Access)</option>
+                <option value="user"> User (Basic Access)</option>
               </select>
             </div>
 
@@ -210,13 +211,13 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
             {/* Quick privileges breakdown */}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "12px" }}>
               <div style={{ background: "var(--bg-input)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
-                <b style={{ color: "var(--warning-amber)" }}>👑 Super Admin:</b> Full database, user suspension, role promotion, audit logs, security policies, barrier engine calibration.
+                <b style={{ color: "var(--warning-amber)" }}> Super Admin:</b> Full database, user suspension, role promotion, audit logs, security policies, barrier engine calibration.
               </div>
               <div style={{ background: "var(--bg-input)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
-                <b style={{ color: "var(--accent-cyan)" }}>🛠️ System Manager:</b> Food & material catalogs, operational settings, reports, analysis monitoring.
+                <b style={{ color: "var(--accent-cyan)" }}> System Manager:</b> Food & material catalogs, operational settings, reports, analysis monitoring.
               </div>
               <div style={{ background: "var(--bg-input)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
-                <b style={{ color: "var(--accent-green)" }}>👤 User:</b> Packaging advisor, ASTM compare, What-If simulator, recommendations, and report downloads.
+                <b style={{ color: "var(--accent-green)" }}> User:</b> Packaging advisor, ASTM compare, What-If simulator, recommendations, and report downloads.
               </div>
             </div>
           </div>

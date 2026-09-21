@@ -1,18 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Layers, Check, Sparkles, ArrowLeft, ArrowRight, ShieldCheck,
-  Recycle, DollarSign, Leaf, Sliders
+  Recycle, DollarSign, Leaf, Sliders, RefreshCw
 } from "lucide-react";
 import { MATERIALS_CATALOG } from "../../data/materials";
 
-export function Step3Packaging({ input, setInput, onBack, onRunAnalysis }) {
+export function Step3Packaging({ input, setInput, isAnalyzing = false, onBack, onRunAnalysis }) {
+  const [materials, setMaterials] = useState(MATERIALS_CATALOG);
   const [selectedMaterialId, setSelectedMaterialId] = useState(
     input.preferred_material || "metalized"
   );
 
+  // Fetch materials dynamically from backend / Supabase
+  useEffect(() => {
+    fetch("/api/materials")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const normalized = data.map(m => ({
+            id: m.id,
+            short: m.short || m.name,
+            name: m.name,
+            category: m.category || "Polymer Barrier",
+            nominal_otr: m.nominal_otr,
+            nominal_wvtr: m.nominal_wvtr,
+            thickness: m.thickness || `${m.nominal_thickness_um || 50} µm`,
+            carbon: m.carbon !== undefined ? m.carbon : (m.carbon_kg_co2_kg || 2.5),
+            recyclability: m.recyclability || m.recyclability_code || "RIC #7 Other",
+            description: m.description || "Multi-layer barrier laminate"
+          }));
+          setMaterials(normalized);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const set = (k, v) => setInput(x => ({ ...x, [k]: v }));
 
-  const activeMaterial = MATERIALS_CATALOG.find(m => m.id === selectedMaterialId) || MATERIALS_CATALOG[2];
+  const activeMaterial = materials.find(m => m.id === selectedMaterialId) || materials[0] || MATERIALS_CATALOG[2];
 
   return (
     <div style={{ maxWidth: "1020px", margin: "0 auto" }}>
@@ -92,12 +117,12 @@ export function Step3Packaging({ input, setInput, onBack, onRunAnalysis }) {
       <div style={{ marginBottom: "14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span className="micro-label">Candidate Polymer Structures (ASTM D3985 / F1249 Specifications)</span>
         <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>
-          {MATERIALS_CATALOG.length} Standard Material Grades Available
+          {materials.length} Standard Material Grades Available
         </span>
       </div>
 
       <div className="material-grid" style={{ marginBottom: "24px" }}>
-        {MATERIALS_CATALOG.map(m => {
+        {materials.map(m => {
           const isSelected = selectedMaterialId === m.id;
           return (
             <div
@@ -197,10 +222,29 @@ export function Step3Packaging({ input, setInput, onBack, onRunAnalysis }) {
         <button
           type="button"
           className="btn btn-primary"
-          style={{ padding: "12px 28px", fontSize: "14px" }}
+          style={{
+            padding: "12px 28px",
+            fontSize: "14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            opacity: isAnalyzing ? 0.85 : 1,
+            cursor: isAnalyzing ? "wait" : "pointer"
+          }}
+          disabled={isAnalyzing}
           onClick={onRunAnalysis}
         >
-          <Sparkles size={16} /> Run AI Analysis & Optimize →
+          {isAnalyzing ? (
+            <>
+              <RefreshCw size={16} className="spin" />
+              <span>Analyzing...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles size={16} />
+              <span>Run AI Analysis & Optimize →</span>
+            </>
+          )}
         </button>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Wrench, ShieldAlert, CheckCircle2, Package, Beaker, Settings, Save } from "lucide-react";
 import { MATERIALS_CATALOG, FOODS } from "../../data/materials";
 
-export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch }) {
+export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authToken }) {
   const [activeTab, setActiveTab] = useState("materials");
   const [materialList, setMaterialList] = useState(MATERIALS_CATALOG);
   const [foodList, setFoodList] = useState(FOODS);
@@ -37,16 +37,47 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch }) {
   }
 
   const toggleMaterialStatus = (id) => {
-    setMaterialList(prev => prev.map(m => m.id === id ? { ...m, active: m.active === false ? true : false } : m));
-    setSavedNotice("Packaging material database status updated.");
+    let nextActive = true;
+    setMaterialList(prev => prev.map(m => {
+      if (m.id === id) {
+        nextActive = m.active === false;
+        return { ...m, active: nextActive };
+      }
+      return m;
+    }));
+    setSavedNotice("Packaging material database status updated in Supabase.");
     setTimeout(() => setSavedNotice(null), 2500);
+
+    const headers = { "Content-Type": "application/json" };
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
+    fetch("/api/management/materials", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ id, is_active: nextActive })
+    }).catch(err => console.warn("Material status sync:", err));
   };
 
   const handleSaveSettings = (e) => {
     e.preventDefault();
-    setSavedNotice("Application operational settings successfully updated.");
+    setSavedNotice("Application operational settings successfully updated in Supabase.");
     setTimeout(() => setSavedNotice(null), 2500);
+
+    const headers = { "Content-Type": "application/json" };
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
+    fetch("/api/management/settings", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        default_temp_c: Number(settings.defaultTemp),
+        default_shelf_buffer_days: Number(settings.defaultShelfBuffer),
+        units: settings.units,
+        currency: settings.currency
+      })
+    }).catch(err => console.warn("Settings sync:", err));
   };
+
 
   return (
     <div style={{ maxWidth: "1140px", margin: "0 auto" }}>

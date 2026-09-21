@@ -164,6 +164,8 @@ class OptimizedMaterialResult(BaseModel):
     sustainability_indicator: Optional[SustainabilityIndicator] = None
     key_strengths: List[str]
     potential_risks: List[str]
+    recommendation_reasons: Optional[List[str]] = Field(default_factory=list, description="Structured reasons: Why this material?")
+    why_this_material: Optional[Dict[str, str]] = Field(default_factory=dict, description="Detailed category breakdown for Why this material?")
 
 
 class ShelfLifePredictionRequest(BaseModel):
@@ -225,6 +227,14 @@ class UserLoginRequest(BaseModel):
     requested_role: Optional[str] = Field(None, description="Optional role override for demo login")
 
 
+class UserSignupRequest(BaseModel):
+    name: str = Field(..., description="User full name")
+    email: str = Field(..., description="User email address")
+    password: str = Field(..., description="User password")
+    role: Optional[str] = Field("user", description="Initial role assignment: user, system_manager, super_admin")
+
+
+
 class UserProfile(BaseModel):
     id: str
     name: str
@@ -262,5 +272,30 @@ class SystemLogEntry(BaseModel):
     category: str
     status: str
     details: str
+
+
+class MaterialManagementUpdate(BaseModel):
+    id: str
+    is_active: Optional[bool] = None
+    nominal_otr: Optional[float] = None
+    nominal_wvtr: Optional[float] = None
+    sustainability_score: Optional[float] = None
+
+
+class FoodPresetManagementUpdate(BaseModel):
+    id: str
+    name: Optional[str] = None
+    category: Optional[str] = None
+    moisture_pct: Optional[float] = None
+    fat_pct: Optional[float] = None
+    shelf_life_days: Optional[int] = None
+
+
+class SystemSettingsUpdate(BaseModel):
+    default_temp_c: Optional[float] = 25.0
+    default_shelf_buffer_days: Optional[int] = 14
+    units: Optional[str] = "Metric (SI)"
+    currency: Optional[str] = "USD ($)"
+
 
 

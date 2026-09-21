@@ -3,7 +3,7 @@ import { History, Eye, Copy, Download, Trash2, ArrowRight, Sparkles, CheckCircle
 import { EmptyState } from "../common/FeedbackStates";
 import { StatusBadge } from "../common/StatusBadge";
 
-export function AnalysisHistory({ onSelectAnalysis, onDuplicateAnalysis, onDownloadReport, onLaunchNew }) {
+export function AnalysisHistory({ onSelectAnalysis, onDuplicateAnalysis, onDownloadReport, onLaunchNew, authToken, currentUser }) {
   const [history, setHistory] = useState(() => {
     try {
       const saved = localStorage.getItem("packsmart_history");
@@ -59,8 +59,12 @@ export function AnalysisHistory({ onSelectAnalysis, onDuplicateAnalysis, onDownl
   };
 
   useEffect(() => {
-    fetch("/api/history")
+    const headers = {};
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
+    fetch("/api/history", { headers })
       .then(res => res.json())
+
       .then(dbRecords => {
         if (Array.isArray(dbRecords) && dbRecords.length > 0) {
           const mapped = dbRecords.map(r => ({

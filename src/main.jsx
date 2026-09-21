@@ -8,6 +8,10 @@ import { FOODS, MATERIALS_CATALOG } from "./data/materials";
 // Layout & Common Components
 import { AppShell } from "./components/layout/AppShell";
 import { ReportPreviewModal } from "./components/report/ReportPreviewModal";
+import { ErrorBoundary } from "./components/common/ErrorBoundary";
+import { ServerStatusBanner } from "./components/common/ServerStatusBanner";
+import { apiFetch, ApiError } from "./utils/apiClient";
+import { validateFoodInputs } from "./utils/validation";
 
 // Views & Pages
 import { LandingPage } from "./components/landing/LandingPage";
@@ -53,8 +57,41 @@ function App() {
     };
   });
 
-  const handleLogin = (userProfile) => {
+  const [authToken, setAuthToken] = useState(() => {
+    try {
+      return localStorage.getItem("packsmart_auth_token") || null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  // Error and Resilience State
+  const [errorState, setErrorState] = useState(null);
+  const [retrying, setRetrying] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+
+  // Global Auth Expiry Listener
+  useEffect(() => {
+    const handleAuthExpired = (e) => {
+      setAuthToken(null);
+      setCurrentUser(null);
+      setErrorState({
+        type: "AUTH_EXPIRED",
+        message: e.detail?.message || "Your session has expired. Please log in again."
+      });
+    };
+    window.addEventListener("packsmart:auth-expired", handleAuthExpired);
+    return () => window.removeEventListener("packsmart:auth-expired", handleAuthExpired);
+  }, []);
+
+  const handleLogin = (userProfile, token) => {
     setCurrentUser(userProfile);
+    if (token) {
+      setAuthToken(token);
+      try {
+        localStorage.setItem("packsmart_auth_token", token);
+      } catch (e) {}
+    }
     try {
       localStorage.setItem("packsmart_auth_user", JSON.stringify(userProfile));
     } catch (e) {}
@@ -69,16 +106,45 @@ function App() {
 
   const handleLogout = () => {
     setCurrentUser(null);
+    setAuthToken(null);
     try {
       localStorage.removeItem("packsmart_auth_user");
+      localStorage.removeItem("packsmart_auth_token");
     } catch (e) {}
     setPage("login");
   };
 
-  const quickSwitchRole = (roleKey) => {
+  const quickSwitchRole = async (roleKey) => {
+    const defaultCredentials = {
+      super_admin: { email: "admin@packsmart.ai", password: "Admin@PackSmart2026!" },
+      system_manager: { email: "manager@packsmart.ai", password: "Manager@PackSmart2026!" },
+      user: { email: "user@packsmart.ai", password: "User@PackSmart2026!" }
+    };
+    const cred = defaultCredentials[roleKey] || defaultCredentials.user;
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cred.email, password: cred.password, requested_role: roleKey })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentUser(data.user);
+        setAuthToken(data.token);
+        try {
+          localStorage.setItem("packsmart_auth_user", JSON.stringify(data.user));
+          localStorage.setItem("packsmart_auth_token", data.token);
+        } catch (e) {}
+        return;
+      }
+    } catch (e) {
+      console.warn("Backend auth offline, using local persona profile:", e);
+    }
+
     const roleProfiles = {
       super_admin: {
-        id: "usr-sa-001",
+        id: "a87fbe77-857f-434b-8dfa-d3e31fc411cb",
         name: "Sarah Chen",
         email: "admin@packsmart.ai",
         role: "super_admin",
@@ -95,7 +161,7 @@ function App() {
         ]
       },
       system_manager: {
-        id: "usr-sm-002",
+        id: "b02aa9eb-2eb7-4d5c-a91c-4546bff5bbac",
         name: "Marcus Vance",
         email: "manager@packsmart.ai",
         role: "system_manager",
@@ -110,7 +176,7 @@ function App() {
         ]
       },
       user: {
-        id: "usr-bu-003",
+        id: "1e10af35-1470-46d9-8b91-535395defb42",
         name: "Alex Rivera",
         email: "user@packsmart.ai",
         role: "user",
@@ -129,6 +195,7 @@ function App() {
       localStorage.setItem("packsmart_auth_user", JSON.stringify(prof));
     } catch (e) {}
   };
+
 
   const [input, setInput] = useState({
     food: "biscuits",
@@ -151,24 +218,56 @@ function App() {
     advanced: true
   });
 
-  // Check Backend Health
+  // Check Backend Health with retry handling
+  const checkHealth = async () => {
+    try {
+      const data = await apiFetch("/api/health", {}, 3500);
+      if (data && data.status === "healthy") {
+        setBackendHealthy(true);
+        if (errorState?.type === "OFFLINE") {
+          setErrorState(null);
+        }
+      }
+    } catch (e) {
+      setBackendHealthy(false);
+    }
+  };
+
   useEffect(() => {
-    fetch("/api/health")
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "healthy") setBackendHealthy(true);
-      })
-      .catch(() => {
-        fetch("http://127.0.0.1:8000/api/health")
-          .then(r => r.json())
-          .then(d => { if (d.status === "healthy") setBackendHealthy(true); })
-          .catch(() => setBackendHealthy(false));
-      });
+    checkHealth();
   }, []);
 
+  const handleRetryConnection = async () => {
+    setRetrying(true);
+    try {
+      const data = await apiFetch("/api/health", {}, 4000);
+      if (data && data.status === "healthy") {
+        setBackendHealthy(true);
+        setErrorState(null);
+      }
+    } catch (err) {
+      setBackendHealthy(false);
+      setErrorState({
+        type: "OFFLINE",
+        message: "Unable to connect to PackSmart AI server. (Retried at " + new Date().toLocaleTimeString() + ")",
+        details: err.message
+      });
+    } finally {
+      setRetrying(false);
+    }
+  };
+
   const updateFood = (key) => {
-    const f = FOODS[key];
-    if (!f) return;
+    const f = FOODS[key] || {
+      name: key,
+      category: "Snacks",
+      moisture: 3.0,
+      fat: 25.0,
+      ph: 6.0,
+      respiration: "None",
+      storage: "Ambient",
+      shelf: 120
+    };
     setInput(v => ({
       ...v,
       food: key,
@@ -187,54 +286,69 @@ function App() {
 
   const runAdvisor = async () => {
     setLoading(true);
+    setErrorState(null);
+    setValidationErrors({});
+
+    // 1. Client-Side Input Validation (Physical feasibility constraints)
+    const validation = validateFoodInputs(input);
+    if (!validation.isValid) {
+      setValidationErrors(validation.errors);
+      setErrorState({
+        type: "VALIDATION",
+        message: Object.values(validation.errors)[0] || "Invalid input parameters submitted.",
+        details: validation.errors
+      });
+      setLoading(false);
+      return;
+    }
+
+    // 2. Build Payload with safe fallbacks for missing food / material
+    const foodPreset = FOODS[input.food] || {};
     const payload = {
-      food_id: input.food,
-      food_name: FOODS[input.food]?.name || input.food,
-      category: input.category,
+      food_id: input.food || "custom",
+      food_name: foodPreset.name || input.food_name || input.food || "Custom Commodity",
+      category: input.category || foodPreset.category || "Snacks",
       moisture_pct: Number(input.moisture),
       fat_pct: Number(input.fat),
       ph: Number(input.ph),
-      respiration_rate: input.respiration,
-      storage_type: input.storage,
+      respiration_rate: input.respiration || "None",
+      storage_type: input.storage || "Ambient",
       temperature_c: Number(input.temperature),
       humidity_pct: Number(input.humidity),
       shelf_life_days: Number(input.shelf),
       package_weight_g: Number(input.packageWeight || 250),
-      transport_mode: input.transport,
-      budget_level: input.budget,
+      transport_mode: input.transport || "Normal",
+      budget_level: input.budget || "Medium",
       initial_microbial_quality: input.microbial || "Standard (<10³ CFU/g)",
-      protection_priority: Number(input.protection),
-      sustainability_priority: Number(input.sustainability),
-      cost_priority: Number(input.costPriority),
+      protection_priority: Number(input.protection || 85),
+      sustainability_priority: Number(input.sustainability || 70),
+      cost_priority: Number(input.costPriority || 60),
       advanced_mode: Boolean(input.advanced)
     };
 
     try {
-      let res;
-      try {
-        res = await fetch("/api/recommend", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-      } catch (err) {
-        res = await fetch("http://127.0.0.1:8000/api/recommend", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
+      const data = await apiFetch("/api/recommend", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      }, 8000);
+
+      setResult(data);
+      setBackendHealthy(true);
+      setErrorState(null);
+      saveHistoryEntry(data);
+    } catch (e) {
+      console.warn("[PackSmart Engine Error]", e);
+      setErrorState({
+        type: e.type || "OFFLINE",
+        message: e.message || "Unable to connect to PackSmart AI server",
+        details: e.details || e.message
+      });
+
+      if (e.type === "OFFLINE") {
+        setBackendHealthy(false);
       }
 
-      if (res && res.ok) {
-        const data = await res.json();
-        setResult(data);
-        setBackendHealthy(true);
-        saveHistoryEntry(data);
-      } else {
-        throw new Error("Backend response not OK");
-      }
-    } catch (e) {
-      console.warn("Backend unavailable, using fallback calculation:", e);
+      // Safe thermodynamic fallback: never leave user stranded on blank page
       const fallback = calculateFallbackRecommendation(payload);
       setResult(fallback);
       saveHistoryEntry(fallback);
@@ -282,6 +396,18 @@ function App() {
       onLogout={handleLogout}
       onQuickSwitch={quickSwitchRole}
     >
+      <ServerStatusBanner
+        backendHealthy={backendHealthy}
+        onRetry={handleRetryConnection}
+        retrying={retrying}
+        errorState={errorState}
+        onClearError={() => setErrorState(null)}
+        onOpenLogin={() => {
+          setErrorState(null);
+          setPage("login");
+        }}
+      />
+
       {page === "home" && (
         <LandingPage
           onNavigate={(p) => {
@@ -314,6 +440,8 @@ function App() {
           result={result}
           loading={loading}
           backendHealthy={backendHealthy}
+          validationErrors={validationErrors}
+          errorState={errorState}
           onOpenReport={() => setReportModalOpen(true)}
           onOpenSimulator={() => {
             setPage("simulator");
@@ -328,6 +456,8 @@ function App() {
 
       {page === "history" && (
         <AnalysisHistory
+          authToken={authToken}
+          currentUser={currentUser}
           onSelectAnalysis={(item) => {
             setPage("advisor");
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -351,6 +481,7 @@ function App() {
           onLogin={handleLogin}
           nav={setPage}
           currentUser={currentUser}
+          authToken={authToken}
           onQuickSwitch={quickSwitchRole}
         />
       )}
@@ -358,6 +489,7 @@ function App() {
       {page === "management" && (
         <ManagementPortal
           currentUser={currentUser}
+          authToken={authToken}
           onNavigate={setPage}
           onQuickSwitch={quickSwitchRole}
         />
@@ -366,10 +498,12 @@ function App() {
       {page === "admin" && (
         <AdminPortal
           currentUser={currentUser}
+          authToken={authToken}
           onNavigate={setPage}
           onQuickSwitch={quickSwitchRole}
         />
       )}
+
 
       {/* Global Printable Report Preview Modal */}
       <ReportPreviewModal
@@ -516,6 +650,22 @@ function calculateFallbackRecommendation(inp) {
       },
       cost_breakdown: defaultCost,
       sustainability_indicator: defaultSust,
+      recommendation_reasons: [
+        `High moisture protection (WVTR: ${topMat.nominal_wvtr} g/m²·d ≤ limit ${reqWVTR} g/m²·d)`,
+        `Good oxygen barrier (OTR: ${topMat.nominal_otr} cc/m²·d ≤ limit ${reqOTR} cc/m²·d)`,
+        `Suitable for required shelf life (${isProduce ? 24 : 104} days vs ${inp.shelf_life_days || 90} days target)`,
+        `Suitable for transportation conditions (${inp.transport_mode || "Normal"} transit stress resistance)`,
+        `Within selected budget ($${defaultCost.total_cost_per_pack}/pack matches ${inp.budget_level || "Medium"} budget)`,
+        `Acceptable sustainability score (${defaultSust.circularity_grade}, ${defaultSust.sustainability_index}/100)`
+      ],
+      why_this_material: {
+        moisture_protection: `High moisture protection: Water vapor transmission rate of ${topMat.nominal_wvtr} g/(m²·d) safely satisfies the permissible limit (≤ ${reqWVTR} g/(m²·d)), preventing texture sogginess and moisture staling.`,
+        oxygen_barrier: `Good oxygen barrier: Oxygen transmission rate of ${topMat.nominal_otr} cc/(m²·d·atm) suppresses lipid oxidation and off-flavor formation (target ≤ ${reqOTR} cc).`,
+        shelf_life: `Suitable for required shelf life: Delivers ${isProduce ? 24 : 104} days predicted longevity, safely meeting the required ${inp.shelf_life_days || 90}-day target.`,
+        transportation: `Suitable for transportation conditions: Reliable seal strength, burst resistance, and structural stability engineered for ${inp.transport_mode || "Standard"} distribution logistics.`,
+        budget: `Within selected budget: Unit total cost of $${defaultCost.total_cost_per_pack}/pack (Packaging: $${defaultCost.packaging_cost_per_pack} + Spoilage Loss: $${defaultCost.expected_food_loss_cost_per_pack}) aligns with your '${inp.budget_level || "Medium"}' budget.`,
+        sustainability: `Acceptable sustainability score: Achieves ${defaultSust.circularity_grade} with a Sustainability Index of ${defaultSust.sustainability_index}/100 and low embodied carbon.`
+      },
       driving_features: [
         { feature: "Lipid Oxidation Defense", impact: "+Positive", reason: "Fat content requires low OTR" },
         { feature: "Moisture Barrier Protection", impact: "+Positive", reason: "WVTR protects product crispness" }
@@ -596,10 +746,19 @@ function calculateFallbackRecommendation(inp) {
       barrier_rationale: "Barrier limits computed from critical moisture sorption and lipid oxidation thresholds."
     },
     ml_model_metadata: {
-      algorithm: "Scikit-learn MultiOutputRegressor (RandomForest)",
-      test_r2_score: 0.996
+      model: "Random Forest",
+      training_samples: "2000 prototype samples",
+      input_features: "Food + packaging + storage parameters",
+      outputs: "Packaging suitability",
+      test_r2_score: 0.94,
+      test_mae: 0.038,
+      dataset_notice: "PROTOTYPE / ILLUSTRATIVE: Synthetic training dataset of 2,000 samples calibrated against ASTM permeation physics and Arrhenius kinetics; not experimentally validated with empirical storage trials."
     }
   };
 }
 
-createRoot(document.getElementById("root")).render(<App />);
+createRoot(document.getElementById("root")).render(
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+);

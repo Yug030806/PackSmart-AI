@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, AlertCircle } from "lucide-react";
 import { Step1Food } from "./Step1Food";
 import { Step2Conditions } from "./Step2Conditions";
 import { Step3Packaging } from "./Step3Packaging";
 import { Step4Analysis } from "./Step4Analysis";
 import { Step5Results } from "./Step5Results";
+import { validateFoodInputs } from "../../utils/validation";
 
 export function AnalysisWizard({
   input,
@@ -14,6 +15,8 @@ export function AnalysisWizard({
   result,
   loading,
   backendHealthy,
+  validationErrors = {},
+  errorState,
   onOpenReport,
   onOpenSimulator
 }) {
@@ -30,9 +33,24 @@ export function AnalysisWizard({
   ];
 
   const handleStartAnalysis = async () => {
-    setCurrentStep(4);
     setIsAnalyzing(true);
-    // Run real ML backend pipeline
+    // 1. Validate physical food and packaging constraints
+    const val = validateFoodInputs(input);
+    if (!val.isValid) {
+      setIsAnalyzing(false);
+      await runAdvisor(); // Triggers errorState and validationErrors
+      if (val.errors.food || val.errors.moisture || val.errors.fat || val.errors.ph || val.errors.composition) {
+        setCurrentStep(1);
+      } else {
+        setCurrentStep(2);
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    setCurrentStep(4);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Run real ML backend pipeline with timeout protection
     await runAdvisor();
     setIsAnalyzing(false);
   };
@@ -72,13 +90,46 @@ export function AnalysisWizard({
         })}
       </nav>
 
+      {/* Validation Error Alert Banner */}
+      {validationErrors && Object.keys(validationErrors).length > 0 && (
+        <div style={{
+          background: "rgba(240, 68, 56, 0.12)",
+          border: "1px solid rgba(240, 68, 56, 0.4)",
+          borderRadius: "var(--radius-md)",
+          padding: "14px 18px",
+          marginBottom: "20px",
+          display: "flex",
+          gap: "12px",
+          alignItems: "flex-start",
+          color: "#fda29b"
+        }}>
+          <AlertCircle size={20} style={{ flexShrink: 0, marginTop: "2px", color: "#f04438" }} />
+          <div style={{ flex: 1 }}>
+            <strong style={{ display: "block", fontSize: "14px", color: "#fff", marginBottom: "4px" }}>
+              Input Parameter Validation Issue
+            </strong>
+            <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "12.5px", lineHeight: "1.5" }}>
+              {Object.entries(validationErrors).map(([key, msg]) => (
+                <li key={key}>{msg}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
       {/* Step Content */}
       {currentStep === 1 && (
         <Step1Food
           input={input}
           setInput={setInput}
+          validationErrors={validationErrors}
           onSelectFood={(key) => updateFood(key)}
           onNext={() => {
+            const val = validateFoodInputs(input);
+            if (val.errors.food || val.errors.moisture || val.errors.fat || val.errors.ph || val.errors.composition) {
+              runAdvisor(); // Populates validationErrors and errorState
+              return;
+            }
             setCurrentStep(2);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
@@ -89,11 +140,17 @@ export function AnalysisWizard({
         <Step2Conditions
           input={input}
           setInput={setInput}
+          validationErrors={validationErrors}
           onBack={() => {
             setCurrentStep(1);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           onNext={() => {
+            const val = validateFoodInputs(input);
+            if (val.errors.temperature || val.errors.humidity || val.errors.shelf || val.errors.packageWeight) {
+              runAdvisor();
+              return;
+            }
             setCurrentStep(3);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
@@ -104,6 +161,7 @@ export function AnalysisWizard({
         <Step3Packaging
           input={input}
           setInput={setInput}
+          isAnalyzing={isAnalyzing || loading}
           onBack={() => {
             setCurrentStep(2);
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -114,6 +172,7 @@ export function AnalysisWizard({
 
       {currentStep === 4 && (
         <Step4Analysis
+          input={input}
           onComplete={handleAnalysisAnimationComplete}
           isBackendDone={!loading}
         />
