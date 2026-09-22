@@ -9,10 +9,10 @@ export function EmptyState({
 }) {
   return (
     <div className="glass-card" style={{ padding: "48px 24px", textAlign: "center", display: "grid", placeItems: "center", maxWidth: "560px", margin: "40px auto" }}>
-      <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(50, 213, 131, 0.1)", display: "grid", placeItems: "center", color: "var(--accent-green)", marginBottom: "16px" }}>
+      <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(63, 118, 88, 0.12)", display: "grid", placeItems: "center", color: "var(--color-muted-green)", marginBottom: "16px" }}>
         <CircleHelp size={28} />
       </div>
-      <h3 style={{ fontSize: "20px", color: "#fff", marginBottom: "8px" }}>{title}</h3>
+      <h3 style={{ fontSize: "20px", color: "var(--color-primary-dark)", marginBottom: "8px" }}>{title}</h3>
       <p style={{ fontSize: "13.5px", color: "var(--text-secondary)", marginBottom: "24px", maxWidth: "420px" }}>{description}</p>
       {onAction && (
         <button className="btn btn-primary" onClick={onAction}>
@@ -32,11 +32,11 @@ export function ErrorState({
   const [showDetails, setShowDetails] = React.useState(false);
 
   return (
-    <div className="glass-card" style={{ padding: "36px 24px", textAlign: "center", maxWidth: "520px", margin: "40px auto", borderColor: "rgba(242, 95, 92, 0.3)" }}>
-      <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: "rgba(242, 95, 92, 0.12)", display: "grid", placeItems: "center", color: "var(--error-red)", margin: "0 auto 16px" }}>
+    <div className="glass-card" style={{ padding: "36px 24px", textAlign: "center", maxWidth: "520px", margin: "40px auto", borderColor: "rgba(201, 91, 74, 0.35)" }}>
+      <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: "rgba(201, 91, 74, 0.12)", display: "grid", placeItems: "center", color: "var(--color-risk-red)", margin: "0 auto 16px" }}>
         <span style={{ fontSize: "24px" }}>⚠</span>
       </div>
-      <h3 style={{ fontSize: "19px", color: "#fff", marginBottom: "8px" }}>{title}</h3>
+      <h3 style={{ fontSize: "19px", color: "var(--color-primary-dark)", marginBottom: "8px" }}>{title}</h3>
       <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "20px" }}>{message}</p>
       
       {onRetry && (

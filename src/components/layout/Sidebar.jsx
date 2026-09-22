@@ -19,9 +19,11 @@ export function Sidebar({
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "advisor", label: "New Analysis", icon: Sparkles, highlight: true },
+    { id: "workbench", label: "Decision Workbench", icon: SlidersHorizontal, highlight: true },
+    { id: "advisor", label: "New Analysis", icon: Sparkles },
+    { id: "brainstorm", label: "Packaging Whiteboard", icon: Layers },
     { id: "history", label: "My Analyses", icon: History },
-    { id: "compare", label: "Materials Comparison", icon: Layers },
+    { id: "compare", label: "Materials Benchmark", icon: FileText },
     { id: "simulator", label: "What-If Simulator", icon: SlidersHorizontal },
     { id: "database", label: "Knowledge Base", icon: FileText }
   ];
@@ -63,7 +65,7 @@ export function Sidebar({
           >
             <img src="/logo.jpg" alt="PackSmart AI" className="sidebar-brand-logo" />
             {!isCollapsed && (
-              <span style={{ color: "#ffffff", fontSize: "16px", fontWeight: 700 }}>
+              <span style={{ color: "var(--color-primary-dark)", fontSize: "16px", fontWeight: 700 }}>
                 PackSmart <b style={{ color: "var(--accent-green)", fontWeight: 800 }}>AI</b>
               </span>
             )}
@@ -100,8 +102,8 @@ export function Sidebar({
                 <Icon size={18} className="sidebar-link-icon" style={{ color: active ? "var(--accent-green)" : item.highlight ? "var(--accent-cyan)" : undefined }} />
                 {!isCollapsed && <span>{item.label}</span>}
                 {!isCollapsed && item.highlight && (
-                  <span className="sidebar-link-badge" style={{ background: "rgba(50, 213, 131, 0.15)", color: "var(--accent-green)", marginLeft: "auto" }}>
-                    AI
+                  <span className="sidebar-link-badge" style={{ background: "var(--accent-green-subtle)", color: "var(--accent-green)", marginLeft: "auto" }}>
+                    CORE
                   </span>
                 )}
               </button>

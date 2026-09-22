@@ -140,12 +140,12 @@ export function AnalysisHistory({ onSelectAnalysis, onDuplicateAnalysis, onDownl
           </thead>
           <tbody>
             {history.map(item => (
-              <tr key={item.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)" }}>
+              <tr key={item.id} style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                 <td style={{ padding: "14px", color: "var(--text-muted)", fontSize: "12px", fontFamily: "var(--font-mono)" }}>
                   {item.date}
                 </td>
                 <td style={{ padding: "14px" }}>
-                  <b style={{ color: "#fff" }}>{item.food}</b>
+                  <b style={{ color: "var(--color-primary-dark)" }}>{item.food}</b>
                 </td>
                 <td style={{ padding: "14px", color: "var(--text-secondary)", fontSize: "13px" }}>
                   {item.material}
@@ -156,7 +156,7 @@ export function AnalysisHistory({ onSelectAnalysis, onDuplicateAnalysis, onDownl
                   </span>
                 </td>
                 <td style={{ padding: "14px" }}>
-                  <b style={{ color: "#fff" }}>{item.predictedShelfLife} days</b>
+                  <b style={{ color: "var(--color-primary-dark)" }}>{item.predictedShelfLife} days</b>
                   <small style={{ color: "var(--text-muted)", display: "block", fontSize: "11px" }}>Target: {item.shelfLife}d</small>
                 </td>
                 <td style={{ padding: "14px" }}>

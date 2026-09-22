@@ -71,7 +71,7 @@ export class ErrorBoundary extends React.Component {
               APPLICATION RECOVERY SHIELD
             </span>
 
-            <h2 style={{ fontSize: "22px", color: "#fff", margin: "0 0 10px" }}>
+            <h2 style={{ fontSize: "22px", color: "var(--color-primary-dark)", margin: "0 0 10px" }}>
               Something went wrong in this module
             </h2>
 

@@ -1,72 +1,72 @@
 import React, { useEffect, useState, useMemo } from "react";
 import {
-  Sparkles, CheckCircle2, RefreshCw, Layers, ShieldCheck,
-  Zap, Cpu, ArrowDown, Terminal
+  CheckCircle2, RefreshCw, Layers, ShieldCheck,
+  Zap, Cpu, ArrowDown, Terminal, DollarSign, Leaf, Clock, Package
 } from "lucide-react";
 
 export function Step4Analysis({ input = {}, onComplete, isBackendDone = false }) {
   const [currentStage, setCurrentStage] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
-  // The 6 exact processing stages requested by the user
+  // Exact 6-stage sequence requested by the user
   const stages = useMemo(() => [
     {
-      id: "analyzing",
+      id: "requirements",
       num: "01",
-      title: "Analyzing...",
-      badge: "ENGINE INIT",
-      sub: `Calibrating baseline at ${input.temperature || 25}°C, ${input.humidity || 60}% RH, ${input.shelf || 120} days target`,
-      log: `[INIT] Environmental baseline calibrated: ${input.temperature || 25}°C, ${input.humidity || 60}% RH`,
-      icon: Sparkles
-    },
-    {
-      id: "food",
-      num: "02",
-      title: "Food properties",
-      badge: "BIOCHEMISTRY",
-      sub: `${input.food_name || input.food || "Commodity"} · Moisture: ${input.moisture ?? 3.0}% · Fat: ${input.fat ?? 25.0}% · pH: ${input.ph ?? 6.0}`,
-      log: `[BIOCHEM] Moisture sorption isotherms & lipid degradation pathways mapped`,
+      title: "Analyzing product requirements…",
+      badge: "REQUIREMENTS",
+      sub: `${input.food_name || input.food || "Product"} · Moisture: ${input.moisture ?? 4}% · Fat: ${input.fat ?? 18}% · Storage: ${input.storage || "Ambient"} (${input.temperature || 25}°C, ${input.humidity || 60}% RH)`,
+      log: `[PARAM] Evaluated biochemical moisture sorption limits and target longevity: ${input.shelf || 120} days`,
       icon: Layers
     },
     {
       id: "materials",
-      num: "03",
-      title: "Packaging materials",
+      num: "02",
+      title: "Evaluating material properties…",
       badge: "SUBSTRATES",
-      sub: "Screening 8 polymer films, foil tri-laminates & recyclable mono-materials",
-      log: `[MATERIALS] Evaluated 8 barrier polymers across standard gauge thicknesses`,
+      sub: "Screening ASTM calibrated barrier films: OTR (ASTM D3985) & WVTR (ASTM F1249)",
+      log: `[MATERIALS] Benchmarked 8 standard substrates across nominal gauge thicknesses (35–140 µm)`,
       icon: ShieldCheck
     },
     {
-      id: "barrier",
+      id: "shelflife",
+      num: "03",
+      title: "Checking shelf-life constraints…",
+      badge: "KINETICS",
+      sub: "Arrhenius degradation kinetics: microbial stability, lipid oxidation, and moisture staling",
+      log: `[KINETICS] Derived allowable oxygen uptake and critical moisture sorption tolerance thresholds`,
+      icon: Clock
+    },
+    {
+      id: "cost",
       num: "04",
-      title: "Barrier requirements",
-      badge: "PHYSICS",
-      sub: "Computing OTR and WVTR critical tolerance thresholds",
-      log: `[BARRIER] Derived maximum permissible OTR & WVTR critical mass limits`,
-      icon: Zap
+      title: "Comparing cost…",
+      badge: "ECONOMICS",
+      sub: "Unit total cost of ownership: substrate material mass + expected spoilage loss value",
+      log: `[ECONOMICS] Calculated unit package cost ($/pack) and shelf-loss risk for '${input.budget || "Medium"}' budget`,
+      icon: DollarSign
     },
     {
-      id: "ml_prediction",
+      id: "sustainability",
       num: "05",
-      title: "ML prediction",
-      badge: "RANDOM FOREST",
-      sub: "Executing multi-output Random Forest regressor & Arrhenius degradation kinetics",
-      log: `[ML ENGINE] Random Forest suitability score computed (2,000 estimators, R²=0.94)`,
-      icon: Cpu
+      title: "Evaluating sustainability…",
+      badge: "CIRCULARITY",
+      sub: "Packaging-to-product ratio (PPR), recyclability stream (RIC), and avoided food waste LCA",
+      log: `[CIRCULARITY] Calculated carbon footprint and circularity index across recyclable polyolefins`,
+      icon: Leaf
     },
     {
-      id: "recommendation",
+      id: "ready",
       num: "06",
-      title: "Recommendation",
+      title: "Recommendation ready.",
       badge: "PARETO OPTIMA",
-      sub: "Synthesizing multi-objective trade-offs: Barrier vs. Cost vs. Sustainability",
-      log: `[PARETO] Optimal material frontier resolved. Ready for presentation`,
-      icon: CheckCircle2
+      sub: "Multi-objective Pareto compromise synthesized with explainable engineering notes",
+      log: `[COMPLETE] Optimal substrate identified. Presenting recommendation workbench`,
+      icon: Package
     }
   ], [input]);
 
-  // Sequential progression through the 6 stages
+  // Sequential progression through stages during analysis
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentStage(prev => {
@@ -77,18 +77,17 @@ export function Step4Analysis({ input = {}, onComplete, isBackendDone = false })
           return prev;
         }
       });
-    }, 500);
+    }, 450);
 
     return () => clearInterval(timer);
   }, [stages.length]);
 
-  // Transition to results once all 6 stages are reached AND backend calculation is finished
   useEffect(() => {
     if (currentStage === stages.length - 1 && isBackendDone) {
       setIsFinished(true);
       const completionTimeout = setTimeout(() => {
         if (onComplete) onComplete();
-      }, 700);
+      }, 600);
       return () => clearTimeout(completionTimeout);
     }
   }, [currentStage, isBackendDone, onComplete, stages.length]);
@@ -98,224 +97,149 @@ export function Step4Analysis({ input = {}, onComplete, isBackendDone = false })
     : Math.min(96, Math.round(((currentStage + 1) / stages.length) * 100));
 
   return (
-    <div className="ai-processing-container">
-      {/* Central Animated AI Neural Orbital Visualization */}
-      <div className="ai-orb-visualization">
-        <div className="ai-orb-ring ring-1" />
-        <div className="ai-orb-ring ring-2" />
-        <div className="ai-orb-core">
+    <div style={{ maxWidth: "780px", margin: "0 auto", padding: "20px 0" }}>
+      {/* Clean Industrial Header */}
+      <div style={{
+        background: "#FFFFFF",
+        border: "1px solid var(--border-card)",
+        borderRadius: "var(--radius-xl)",
+        padding: "28px 24px",
+        textAlign: "center",
+        boxShadow: "var(--shadow-sm)",
+        marginBottom: "20px"
+      }}>
+        <div style={{
+          width: "56px",
+          height: "56px",
+          borderRadius: "50%",
+          background: isFinished ? "var(--accent-green)" : "var(--accent-green-subtle)",
+          color: isFinished ? "#FFFFFF" : "var(--accent-green)",
+          display: "grid",
+          placeItems: "center",
+          margin: "0 auto 14px",
+          border: "1px solid var(--border-green)"
+        }}>
           {isFinished ? (
-            <CheckCircle2 size={42} style={{ color: "#fff" }} />
+            <CheckCircle2 size={32} strokeWidth={2.5} />
           ) : (
-            <Sparkles size={38} style={{ color: "#fff" }} />
+            <RefreshCw size={26} className="spin" />
           )}
         </div>
 
-        {/* Orbiting atmospheric gas tokens */}
-        <div style={{ position: "absolute", top: "8%", left: "18%", fontSize: "11px", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--accent-green)" }}>
-          O₂
+        <div className="spec-tag green" style={{ marginBottom: "8px" }}>
+          Laboratory Decision Engine
         </div>
-        <div style={{ position: "absolute", bottom: "12%", right: "18%", fontSize: "11px", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--accent-cyan)" }}>
-          H₂O
-        </div>
-        <div style={{ position: "absolute", top: "45%", right: "6%", fontSize: "11px", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--warning-amber)" }}>
-          CO₂
-        </div>
-        <div style={{ position: "absolute", bottom: "45%", left: "6%", fontSize: "11px", fontFamily: "var(--font-mono)", fontWeight: 700, color: "#a78bfa" }}>
-          N₂
+
+        <h2 style={{ fontSize: "22px", fontWeight: 800, color: "var(--color-primary-dark)", margin: "0 0 6px" }}>
+          {isFinished ? "Recommendation Ready ✓" : stages[currentStage].title}
+        </h2>
+
+        <p style={{ fontSize: "13px", color: "var(--text-secondary)", maxWidth: "560px", margin: "0 auto 18px" }}>
+          {isFinished ? "Multi-objective Pareto compromise calculated with explainable technical reasoning." : stages[currentStage].sub}
+        </p>
+
+        {/* Progress Bar */}
+        <div style={{ maxWidth: "480px", margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--text-muted)", marginBottom: "6px" }}>
+            <span>STAGE {currentStage + 1} OF {stages.length}</span>
+            <span style={{ fontWeight: 700, color: "var(--accent-green)" }}>{progressPct}% COMPLETE</span>
+          </div>
+          <div style={{ height: "6px", background: "#DDE4DC", borderRadius: "9999px", overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${progressPct}%`, background: "var(--accent-green)", borderRadius: "9999px", transition: "width 0.3s ease" }} />
+          </div>
         </div>
       </div>
 
-      <div className="micro-label cyan" style={{ marginBottom: "6px" }}>
-        AI Optimization Pipeline
-      </div>
-
-      <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#fff", marginBottom: "6px" }}>
-        {isFinished
-          ? "Optimization Complete ✓"
-          : `Step ${currentStage + 1} of ${stages.length}: ${stages[currentStage].title}`}
-      </h2>
-
-      <p style={{ fontSize: "13.5px", color: "var(--text-secondary)", maxWidth: "520px", marginBottom: "20px" }}>
-        {isFinished
-          ? "Pareto-optimal materials, barrier calculations, and shelf-life predictions are ready."
-          : stages[currentStage].sub}
-      </p>
-
-      {/* Progress Bar Header */}
-      <div className="ai-progress-wrap">
-        <div className="ai-progress-header">
-          <span style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
-            STAGE {currentStage + 1} / {stages.length}
-          </span>
-          <span style={{ color: "var(--accent-green)", fontFamily: "var(--font-mono)", fontWeight: 700 }}>
-            {progressPct}% COMPLETE
-          </span>
-        </div>
-        <div className="ai-progress-track">
-          <div className="ai-progress-fill" style={{ width: `${progressPct}%` }} />
-        </div>
-      </div>
-
-      {/* The Exact 6-Stage Sequential Vertical Pipeline with Arrow Connectors */}
-      <div className="ai-stage-flow">
+      {/* Sequential 6-Stage Timeline */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {stages.map((st, idx) => {
           const isDone = idx < currentStage || (idx === currentStage && isFinished);
           const isActive = idx === currentStage && !isFinished;
-          const isPending = idx > currentStage;
           const StageIcon = st.icon;
 
           return (
-            <React.Fragment key={st.id}>
-              {/* Stage Card */}
-              <div
-                className={`ai-stage-item ${isDone ? "completed" : isActive ? "active" : ""}`}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "12px 18px",
-                  borderRadius: "var(--radius-md)",
-                  border: isDone
-                    ? "1px solid rgba(50, 213, 131, 0.4)"
-                    : isActive
-                    ? "1px solid var(--accent-cyan)"
-                    : "1px solid rgba(255, 255, 255, 0.06)",
-                  background: isDone
-                    ? "rgba(50, 213, 131, 0.08)"
-                    : isActive
-                    ? "linear-gradient(90deg, rgba(54, 191, 250, 0.16) 0%, rgba(50, 213, 131, 0.08) 100%)"
-                    : "rgba(255, 255, 255, 0.02)",
-                  boxShadow: isActive ? "0 0 20px rgba(54, 191, 250, 0.2)" : undefined,
-                  transition: "all 0.3s ease"
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "14px", textAlign: "left", flex: 1 }}>
-                  {/* Status Indicator Icon */}
-                  <div style={{ width: "24px", height: "24px", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    {isDone ? (
-                      <div style={{
-                        width: "22px",
-                        height: "22px",
-                        borderRadius: "50%",
-                        background: "var(--accent-green)",
-                        color: "#051410",
-                        display: "grid",
-                        placeItems: "center"
-                      }}>
-                        <CheckCircle2 size={15} strokeWidth={2.5} />
-                      </div>
-                    ) : isActive ? (
-                      <div style={{
-                        width: "22px",
-                        height: "22px",
-                        borderRadius: "50%",
-                        background: "rgba(54, 191, 250, 0.2)",
-                        color: "var(--accent-cyan)",
-                        display: "grid",
-                        placeItems: "center",
-                        border: "1px solid var(--accent-cyan)"
-                      }}>
-                        <RefreshCw size={13} className="spin" />
-                      </div>
-                    ) : (
-                      <span style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "11px",
-                        color: "var(--text-muted)",
-                        fontWeight: 600
-                      }}>
-                        {st.num}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Stage Label & Details */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{
-                        fontSize: "14px",
-                        fontWeight: isDone || isActive ? 700 : 500,
-                        color: isDone ? "#fff" : isActive ? "var(--accent-cyan)" : "var(--text-secondary)"
-                      }}>
-                        {st.title}
-                      </span>
-                      <span style={{
-                        fontSize: "9.5px",
-                        fontFamily: "var(--font-mono)",
-                        padding: "1px 6px",
-                        borderRadius: "4px",
-                        background: isDone
-                          ? "rgba(50, 213, 131, 0.15)"
-                          : isActive
-                          ? "rgba(54, 191, 250, 0.18)"
-                          : "rgba(255, 255, 255, 0.05)",
-                        color: isDone
-                          ? "var(--accent-green)"
-                          : isActive
-                          ? "var(--accent-cyan)"
-                          : "var(--text-muted)"
-                      }}>
-                        {st.badge}
-                      </span>
+            <div
+              key={st.id}
+              style={{
+                background: isDone ? "#FAFCF9" : isActive ? "#FFFFFF" : "#FFFFFF",
+                border: isDone
+                  ? "1px solid rgba(63, 118, 88, 0.4)"
+                  : isActive
+                  ? "1px solid var(--accent-green)"
+                  : "1px solid var(--border-subtle)",
+                borderRadius: "var(--radius-md)",
+                padding: "12px 16px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                boxShadow: isActive ? "var(--shadow-md)" : "none",
+                transition: "all 0.2s ease"
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", textAlign: "left", flex: 1 }}>
+                <div style={{ width: "22px", height: "22px", borderRadius: "50%", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  {isDone ? (
+                    <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "var(--accent-green)", color: "#FFFFFF", display: "grid", placeItems: "center" }}>
+                      <CheckCircle2 size={13} strokeWidth={2.5} />
                     </div>
-
-                    <div style={{
-                      fontSize: "11.5px",
-                      color: isDone ? "var(--text-secondary)" : isActive ? "#d8f2fd" : "var(--text-muted)",
-                      marginTop: "2px",
-                      lineHeight: "1.4"
-                    }}>
-                      {st.sub}
+                  ) : isActive ? (
+                    <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "var(--accent-green-subtle)", color: "var(--accent-green)", display: "grid", placeItems: "center", border: "1px solid var(--accent-green)" }}>
+                      <RefreshCw size={11} className="spin" />
                     </div>
-                  </div>
+                  ) : (
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--text-muted)", fontWeight: 700 }}>
+                      {st.num}
+                    </span>
+                  )}
                 </div>
 
-                {/* Right stage category icon */}
-                <div style={{
-                  color: isDone ? "var(--accent-green)" : isActive ? "var(--accent-cyan)" : "var(--text-muted)",
-                  opacity: isPending ? 0.35 : 1,
-                  marginLeft: "12px",
-                  flexShrink: 0
-                }}>
-                  <StageIcon size={18} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ fontSize: "13.5px", fontWeight: isDone || isActive ? 700 : 500, color: isDone || isActive ? "var(--color-primary-dark)" : "var(--text-muted)" }}>
+                      {st.title}
+                    </span>
+                    <span className="spec-tag" style={{ fontSize: "9px", padding: "1px 5px" }}>
+                      {st.badge}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: "11px", color: "var(--text-secondary)", marginTop: "1px" }}>
+                    {st.sub}
+                  </div>
                 </div>
               </div>
 
-              {/* Vertical Down Arrow Connector between stages */}
-              {idx < stages.length - 1 && (
-                <div className="ai-stage-arrow-wrap">
-                  <div className={`ai-stage-arrow-line ${isDone ? "completed" : isActive ? "active" : ""}`} />
-                  <div className={`ai-stage-arrow-icon ${isDone ? "completed" : isActive ? "active" : ""}`}>
-                    <ArrowDown size={14} />
-                  </div>
-                </div>
-              )}
-            </React.Fragment>
+              <div style={{ color: isDone || isActive ? "var(--accent-green)" : "var(--text-muted)", opacity: isDone || isActive ? 1 : 0.4, marginLeft: "12px" }}>
+                <StageIcon size={16} />
+              </div>
+            </div>
           );
         })}
       </div>
 
-      {/* Real-Time Calculation Log Terminal Stream */}
-      <div className="ai-terminal-stream">
-        <div className="ai-terminal-header">
+      {/* Telemetry Stream Box */}
+      <div style={{
+        marginTop: "16px",
+        background: "var(--color-primary-dark)",
+        borderRadius: "var(--radius-md)",
+        padding: "14px 16px",
+        fontFamily: "var(--font-mono)",
+        fontSize: "11px",
+        color: "#CBD5CC"
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--paper-beige)", marginBottom: "8px", fontWeight: 700 }}>
           <Terminal size={12} />
           <span>Real-Time Computation Telemetry</span>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
           {stages.slice(0, currentStage + 1).map((st, i) => (
-            <div key={st.id} className="ai-terminal-line">
-              <span style={{ color: "var(--text-muted)", marginRight: "6px" }}>
-                [00:{String(i * 5 + 2).padStart(2, "0")}]
-              </span>
+            <div key={st.id} style={{ display: "flex", gap: "8px" }}>
+              <span style={{ color: "var(--text-muted)" }}>[00:0{i * 2 + 1}]</span>
               <span>{st.log}</span>
             </div>
           ))}
           {!isFinished && (
-            <div style={{ color: "var(--accent-cyan)", fontSize: "11px" }}>
-              <span>&gt; Processing kinetic equations...</span>
-              <span className="ai-terminal-cursor" />
+            <div style={{ color: "var(--accent-secondary-green)", marginTop: "2px" }}>
+              &gt; Resolving kinetic equations...
             </div>
           )}
         </div>

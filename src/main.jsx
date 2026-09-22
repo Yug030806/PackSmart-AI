@@ -21,6 +21,8 @@ import { WhatIfSimulator } from "./components/simulator/WhatIfSimulator";
 import { MaterialsCompare } from "./components/materials/MaterialsCompare";
 import { KnowledgeBase } from "./components/materials/KnowledgeBase";
 import { AnalysisHistory } from "./components/history/AnalysisHistory";
+import { DecisionWorkbench } from "./components/workbench/DecisionWorkbench";
+import { PackagingBrainstorm } from "./components/brainstorm/PackagingBrainstorm";
 import { LoginPage } from "./components/auth/LoginPage";
 import { ManagementPortal } from "./components/portals/ManagementPortal";
 import { AdminPortal } from "./components/portals/AdminPortal";
@@ -428,6 +430,32 @@ function App() {
           onSelectFoodAndLaunch={handleSelectFoodAndLaunch}
           backendHealthy={backendHealthy}
           currentUser={currentUser}
+        />
+      )}
+
+      {page === "workbench" && (
+        <DecisionWorkbench
+          input={input}
+          setInput={setInput}
+          updateFood={updateFood}
+          onNavigate={(p) => {
+            setPage(p);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onOpenReport={() => setReportModalOpen(true)}
+        />
+      )}
+
+      {page === "brainstorm" && (
+        <PackagingBrainstorm
+          onNavigate={(p) => {
+            setPage(p);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onSendToWorkbench={(node) => {
+            setPage("workbench");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         />
       )}
 

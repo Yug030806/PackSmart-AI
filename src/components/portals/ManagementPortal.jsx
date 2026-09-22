@@ -19,8 +19,8 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
   if (!isAuthorized) {
     return (
       <div className="glass-card" style={{ maxWidth: "560px", margin: "40px auto", padding: "40px 24px", textAlign: "center" }}>
-        <ShieldAlert size={48} style={{ color: "var(--error-red)", margin: "0 auto 16px" }} />
-        <h2 style={{ color: "#fff", marginBottom: "8px" }}>Management Access Required</h2>
+        <ShieldAlert size={48} style={{ color: "var(--color-risk-red)", margin: "0 auto 16px" }} />
+        <h2 style={{ color: "var(--color-primary-dark)", marginBottom: "8px" }}>Management Access Required</h2>
         <p style={{ color: "var(--text-secondary)", fontSize: "13.5px", marginBottom: "24px" }}>
           The System Operations Portal is restricted to <b>System Manager</b> and <b>Super Admin</b> roles.
         </p>
@@ -136,7 +136,7 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
         <div className="glass-card" style={{ padding: "24px", overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px", textAlign: "left" }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
+              <tr style={{ borderBottom: "1px solid var(--border-color)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
                 <th style={{ padding: "12px 10px" }}>MATERIAL STRUCTURE</th>
                 <th style={{ padding: "12px 10px" }}>CATEGORY</th>
                 <th style={{ padding: "12px 10px" }}>GAUGE</th>
@@ -148,17 +148,17 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
             </thead>
             <tbody>
               {materialList.map(m => (
-                <tr key={m.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)" }}>
+                <tr key={m.id} style={{ borderBottom: "1px solid var(--border-color)" }}>
                   <td style={{ padding: "12px 10px" }}>
-                    <b style={{ color: "#fff" }}>{m.name}</b>
+                    <b style={{ color: "var(--color-primary-dark)" }}>{m.name}</b>
                     <small style={{ color: "var(--text-muted)", display: "block" }}>{m.short}</small>
                   </td>
                   <td style={{ padding: "12px 10px", color: "var(--text-secondary)" }}>{m.category}</td>
                   <td style={{ padding: "12px 10px" }}>{m.thickness}</td>
-                  <td style={{ padding: "12px 10px", color: "var(--accent-green)", fontWeight: 700 }}>{m.nominal_otr}</td>
-                  <td style={{ padding: "12px 10px", color: "var(--accent-cyan)", fontWeight: 700 }}>{m.nominal_wvtr}</td>
+                  <td style={{ padding: "12px 10px", color: "var(--color-muted-green)", fontWeight: 700 }}>{m.nominal_otr}</td>
+                  <td style={{ padding: "12px 10px", color: "var(--color-data-slate)", fontWeight: 700 }}>{m.nominal_wvtr}</td>
                   <td style={{ padding: "12px 10px" }}>
-                    <span style={{ color: m.active === false ? "var(--error-red)" : "var(--accent-green)", fontWeight: 700, fontSize: "11px" }}>
+                    <span style={{ color: m.active === false ? "var(--color-risk-red)" : "var(--color-muted-green)", fontWeight: 700, fontSize: "11px" }}>
                       {m.active === false ? "○ Inactive" : "● Active"}
                     </span>
                   </td>
@@ -183,7 +183,7 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
         <div className="glass-card" style={{ padding: "24px", overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px", textAlign: "left" }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
+              <tr style={{ borderBottom: "1px solid var(--border-color)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
                 <th style={{ padding: "12px 10px" }}>FOOD COMMODITY</th>
                 <th style={{ padding: "12px 10px" }}>CATEGORY</th>
                 <th style={{ padding: "12px 10px" }}>MOISTURE %</th>
@@ -195,16 +195,16 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
             </thead>
             <tbody>
               {Object.entries(foodList).map(([k, f]) => (
-                <tr key={k} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)" }}>
+                <tr key={k} style={{ borderBottom: "1px solid var(--border-color)" }}>
                   <td style={{ padding: "12px 10px" }}>
-                    <b style={{ color: "#fff" }}>{f.name}</b>
+                    <b style={{ color: "var(--color-primary-dark)" }}>{f.name}</b>
                   </td>
                   <td style={{ padding: "12px 10px", color: "var(--text-secondary)" }}>{f.category}</td>
                   <td style={{ padding: "12px 10px" }}>{f.moisture}%</td>
                   <td style={{ padding: "12px 10px" }}>{f.fat}%</td>
                   <td style={{ padding: "12px 10px" }}>{f.ph}</td>
-                  <td style={{ padding: "12px 10px", color: f.respiration === "High" ? "var(--warning-amber)" : "#fff" }}>{f.respiration}</td>
-                  <td style={{ padding: "12px 10px", color: "var(--accent-green)", fontWeight: 700 }}>{f.shelf} days</td>
+                  <td style={{ padding: "12px 10px", color: f.respiration === "High" ? "var(--color-warning-amber)" : "var(--color-primary-dark)" }}>{f.respiration}</td>
+                  <td style={{ padding: "12px 10px", color: "var(--color-muted-green)", fontWeight: 700 }}>{f.shelf} days</td>
                 </tr>
               ))}
             </tbody>
@@ -215,7 +215,7 @@ export function ManagementPortal({ currentUser, onNavigate, onQuickSwitch, authT
       {/* Tab: Settings */}
       {activeTab === "settings" && (
         <div className="glass-card" style={{ padding: "28px", maxWidth: "600px" }}>
-          <h3 style={{ fontSize: "17px", color: "#fff", marginBottom: "16px" }}>Operational Settings</h3>
+          <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", marginBottom: "16px" }}>Operational Settings</h3>
           <form onSubmit={handleSaveSettings}>
             <div className="field">
               <label>Default Storage Temperature (°C)</label>

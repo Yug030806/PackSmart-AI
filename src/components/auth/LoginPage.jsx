@@ -84,19 +84,19 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
             <img
               src="/logo.jpg"
               alt="PackSmart AI"
-              style={{ width: "54px", height: "54px", borderRadius: "12px", objectFit: "cover", background: "#fff", border: "1px solid rgba(50, 213, 131, 0.4)" }}
+              style={{ width: "54px", height: "54px", borderRadius: "10px", objectFit: "cover", background: "#fff", border: "1px solid var(--border-color)" }}
             />
             <div>
               <div className="micro-label green"><Key size={12} style={{ display: "inline", marginRight: "4px" }} /> Identity & RBAC Gateway</div>
-              <h2 style={{ fontSize: "22px", margin: "2px 0", color: "#fff" }}>Sign In to PackSmart AI</h2>
-              <small style={{ color: "var(--accent-green)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase" }}>
+              <h2 style={{ fontSize: "22px", margin: "2px 0", color: "var(--color-primary-dark)" }}>Sign In to PackSmart AI</h2>
+              <small style={{ color: "var(--color-muted-green)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase" }}>
                 Engineer Better Packaging · Predict Its Performance
               </small>
             </div>
           </div>
 
           {/* 1-Click Demo Persona Switcher */}
-          <div style={{ marginBottom: "20px", background: "var(--bg-input)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
+          <div style={{ marginBottom: "20px", background: "var(--color-bg-base)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)" }}>
             <b style={{ fontSize: "12px", color: "var(--text-secondary)", display: "block", marginBottom: "8px" }}>
               ⚡ 1-Click Persona Switcher (For Demo & Testing)
             </b>
@@ -111,8 +111,8 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
                     style={{
                       padding: "8px 6px",
                       borderRadius: "8px",
-                      background: isActive ? "rgba(50, 213, 131, 0.15)" : "var(--bg-card)",
-                      border: isActive ? "1px solid var(--accent-green)" : "1px solid var(--border-subtle)",
+                      background: isActive ? "rgba(63, 118, 88, 0.15)" : "#FFFFFF",
+                      border: isActive ? "2px solid var(--color-muted-green)" : "1px solid var(--border-color)",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
@@ -121,7 +121,7 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
                     }}
                     onClick={() => handleSelectDemo(acc)}
                   >
-                    <span style={{ fontSize: "12px", fontWeight: 700, color: isActive ? "var(--accent-green)" : "#fff" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 700, color: isActive ? "var(--color-muted-green)" : "var(--color-primary-dark)" }}>
                       {acc.badge} {acc.label}
                     </span>
                     <small style={{ fontSize: "10px", color: "var(--text-muted)" }}>{acc.level.split(" ")[0]} Tier</small>
@@ -188,7 +188,7 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
             <div className="micro-label green" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <Shield size={12} /> Security Architecture
             </div>
-            <h3 style={{ fontSize: "18px", color: "#fff", margin: "4px 0 10px" }}>
+            <h3 style={{ fontSize: "18px", color: "var(--color-primary-dark)", margin: "4px 0 10px" }}>
               3-Tier Hierarchical Access Control
             </h3>
             <p style={{ fontSize: "12.5px", color: "var(--text-secondary)", marginBottom: "18px" }}>
@@ -197,8 +197,8 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
 
             {/* Visual Topology Diagram */}
             <div style={{
-              background: "var(--bg-input)",
-              border: "1px solid var(--border-subtle)",
+              background: "var(--color-bg-base)",
+              border: "1px solid var(--border-color)",
               borderRadius: "var(--radius-md)",
               padding: "14px",
               marginBottom: "18px",
@@ -207,25 +207,25 @@ export function LoginPage({ onLogin, nav, currentUser, onQuickSwitch }) {
               lineHeight: "1.45",
               textAlign: "center"
             }}>
-              <div style={{ color: "var(--warning-amber)", fontWeight: 700 }}>SUPER ADMIN (Full Root Authority)</div>
+              <div style={{ color: "var(--color-warning-amber)", fontWeight: 700 }}>SUPER ADMIN (Full Root Authority)</div>
               <div style={{ color: "var(--text-muted)" }}>│</div>
               <div style={{ color: "var(--text-muted)" }}>▼</div>
-              <div style={{ color: "var(--accent-cyan)", fontWeight: 700 }}>SYSTEM MANAGER (Management Tier)</div>
+              <div style={{ color: "var(--color-data-slate)", fontWeight: 700 }}>SYSTEM MANAGER (Management Tier)</div>
               <div style={{ color: "var(--text-muted)" }}>│</div>
               <div style={{ color: "var(--text-muted)" }}>▼</div>
-              <div style={{ color: "var(--accent-green)", fontWeight: 700 }}>USER (Core Packaging Advisor & Reports)</div>
+              <div style={{ color: "var(--color-muted-green)", fontWeight: 700 }}>USER (Core Packaging Advisor & Reports)</div>
             </div>
 
             {/* Quick privileges breakdown */}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "12px" }}>
-              <div style={{ background: "var(--bg-input)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
-                <b style={{ color: "var(--warning-amber)" }}> Super Admin:</b> Full database, user suspension, role promotion, audit logs, security policies, barrier engine calibration.
+              <div style={{ background: "var(--color-bg-base)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
+                <b style={{ color: "var(--color-warning-amber)" }}> Super Admin:</b> Full database, user suspension, role promotion, audit logs, security policies, barrier engine calibration.
               </div>
-              <div style={{ background: "var(--bg-input)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
-                <b style={{ color: "var(--accent-cyan)" }}> System Manager:</b> Food & material catalogs, operational settings, reports, analysis monitoring.
+              <div style={{ background: "var(--color-bg-base)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
+                <b style={{ color: "var(--color-data-slate)" }}> System Manager:</b> Food & material catalogs, operational settings, reports, analysis monitoring.
               </div>
-              <div style={{ background: "var(--bg-input)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
-                <b style={{ color: "var(--accent-green)" }}> User:</b> Packaging advisor, material comparison, What-If simulator, recommendations, and report downloads.
+              <div style={{ background: "var(--color-bg-base)", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
+                <b style={{ color: "var(--color-muted-green)" }}> User:</b> Packaging advisor, material comparison, What-If simulator, recommendations, and report downloads.
               </div>
             </div>
           </div>

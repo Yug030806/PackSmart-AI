@@ -50,13 +50,13 @@ export function Step3Packaging({ input, setInput, isAnalyzing = false, onBack, o
       </div>
 
       {/* Multi-Objective Pareto Weights Sliders */}
-      <div className="glass-card" style={{ padding: "22px 26px", marginBottom: "24px", borderColor: "rgba(54, 191, 250, 0.3)" }}>
+      <div className="glass-card" style={{ padding: "22px 26px", marginBottom: "24px", borderColor: "var(--border-card)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
           <div>
-            <span className="micro-label cyan" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <span className="spec-tag green" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
               <Sliders size={12} /> Optimization Criteria
             </span>
-            <h3 style={{ fontSize: "17px", color: "#fff", margin: "2px 0 0" }}>
+            <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: "2px 0 0" }}>
               Pareto Trade-Off Calibration
             </h3>
           </div>
@@ -179,11 +179,11 @@ export function Step3Packaging({ input, setInput, isAnalyzing = false, onBack, o
       </div>
 
       {/* Selected Material Comparison Panel Preview */}
-      <div className="glass-card" style={{ padding: "20px 24px", marginBottom: "28px", borderColor: "rgba(50, 213, 131, 0.35)" }}>
+      <div className="glass-card" style={{ padding: "20px 24px", marginBottom: "28px", borderColor: "var(--border-green)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <span className="micro-label green">Active Focus Material</span>
-            <h4 style={{ fontSize: "17px", color: "#fff", margin: "2px 0 0" }}>
+            <h4 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: "2px 0 0" }}>
               {activeMaterial.name}
             </h4>
             <p style={{ fontSize: "12px", color: "var(--text-secondary)", margin: "2px 0 0" }}>
@@ -241,8 +241,8 @@ export function Step3Packaging({ input, setInput, isAnalyzing = false, onBack, o
             </>
           ) : (
             <>
-              <Sparkles size={16} />
-              <span>Run AI Analysis & Optimize →</span>
+              <ShieldCheck size={16} />
+              <span>Execute Engineering Optimization →</span>
             </>
           )}
         </button>

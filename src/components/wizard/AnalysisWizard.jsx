@@ -93,22 +93,22 @@ export function AnalysisWizard({
       {/* Validation Error Alert Banner */}
       {validationErrors && Object.keys(validationErrors).length > 0 && (
         <div style={{
-          background: "rgba(240, 68, 56, 0.12)",
-          border: "1px solid rgba(240, 68, 56, 0.4)",
+          background: "rgba(201, 91, 74, 0.1)",
+          border: "1px solid rgba(201, 91, 74, 0.35)",
           borderRadius: "var(--radius-md)",
           padding: "14px 18px",
           marginBottom: "20px",
           display: "flex",
           gap: "12px",
           alignItems: "flex-start",
-          color: "#fda29b"
+          color: "var(--color-risk-red)"
         }}>
-          <AlertCircle size={20} style={{ flexShrink: 0, marginTop: "2px", color: "#f04438" }} />
+          <AlertCircle size={20} style={{ flexShrink: 0, marginTop: "2px", color: "var(--color-risk-red)" }} />
           <div style={{ flex: 1 }}>
-            <strong style={{ display: "block", fontSize: "14px", color: "#fff", marginBottom: "4px" }}>
+            <strong style={{ display: "block", fontSize: "14px", color: "var(--color-risk-red)", marginBottom: "4px" }}>
               Input Parameter Validation Issue
             </strong>
-            <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "12.5px", lineHeight: "1.5" }}>
+            <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "12.5px", lineHeight: "1.5", color: "var(--color-primary-dark)" }}>
               {Object.entries(validationErrors).map(([key, msg]) => (
                 <li key={key}>{msg}</li>
               ))}

@@ -59,7 +59,7 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 0.85fr", gap: "24px", marginBottom: "28px" }}>
         {/* Left Column: Interactive Controls */}
         <div className="glass-card" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "18px" }}>
-          <h3 style={{ fontSize: "17px", color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
+          <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", display: "flex", alignItems: "center", gap: "8px" }}>
             <Thermometer size={18} style={{ color: "var(--accent-green)" }} /> Storage Temperature & Humidity
           </h3>
 
@@ -201,7 +201,7 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
             <div className="micro-label green" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
               <Sparkles size={11} /> Live Kinetic Visualization
             </div>
-            <h3 style={{ fontSize: "17px", color: "#fff", margin: "4px 0 2px" }}>
+            <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: "4px 0 2px" }}>
               Temperature vs. Shelf-Life Decay
             </h3>
             <p style={{ fontSize: "12px", color: "var(--text-secondary)", marginBottom: "16px" }}>
@@ -214,26 +214,26 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
                 <AreaChart data={temperatureCurveData}>
                   <defs>
                     <linearGradient id="shelfLifeArea" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#32D583" stopOpacity={0.35} />
-                      <stop offset="95%" stopColor="#32D583" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="#3F7658" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#3F7658" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="temp" stroke="#6C7D77" fontSize={11} />
-                  <YAxis stroke="#6C7D77" fontSize={11} unit=" d" />
+                  <XAxis dataKey="temp" stroke="#73847A" fontSize={11} />
+                  <YAxis stroke="#73847A" fontSize={11} unit=" d" />
                   <Tooltip
                     contentStyle={{
-                      background: "#0D1B18",
-                      border: "1px solid rgba(50, 213, 131, 0.3)",
+                      background: "#FFFFFF",
+                      border: "1px solid #DDE4DC",
                       borderRadius: "8px",
                       fontSize: "12px",
-                      color: "#fff"
+                      color: "#17221D"
                     }}
                   />
                   <Area
                     type="monotone"
                     dataKey="shelfLife"
                     name="Estimated Shelf Life"
-                    stroke="#32D583"
+                    stroke="#3F7658"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#shelfLifeArea)"
@@ -244,12 +244,12 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
           </div>
 
           <div style={{
-            background: "rgba(54, 191, 250, 0.08)",
-            border: "1px solid rgba(54, 191, 250, 0.2)",
+            background: "var(--accent-cyan-subtle)",
+            border: "1px solid rgba(47, 106, 136, 0.25)",
             borderRadius: "var(--radius-md)",
             padding: "12px 14px",
             fontSize: "12px",
-            color: "#b4d8ee",
+            color: "var(--color-primary-dark)",
             lineHeight: "1.5"
           }}>
             <b>Kinetic Insight:</b> At your selected <b>{input.temperature}°C</b> and <b>{input.humidity}% RH</b>, the driving moisture vapor differential requires a packaging film with high barrier integrity to avert premature staling.
@@ -259,7 +259,7 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
 
       {/* Transit & Budget Condition Cards */}
       <div className="glass-card" style={{ padding: "24px", marginBottom: "28px" }}>
-        <h3 style={{ fontSize: "17px", color: "#fff", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+        <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
           <Truck size={18} style={{ color: "var(--accent-cyan)" }} /> Transportation & Economic Constraints
         </h3>
 
@@ -275,11 +275,11 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
                   style={{
                     padding: "14px",
                     borderColor: isSelected ? "var(--accent-green)" : undefined,
-                    background: isSelected ? "var(--accent-green-subtle)" : "var(--bg-input)"
+                    background: isSelected ? "var(--accent-green-subtle)" : "#FFFFFF"
                   }}
                   onClick={() => set("transport", opt.id)}
                 >
-                  <b style={{ display: "block", color: isSelected ? "var(--accent-green)" : "#fff", fontSize: "13px" }}>
+                  <b style={{ display: "block", color: isSelected ? "var(--accent-green)" : "var(--color-primary-dark)", fontSize: "13px" }}>
                     {opt.label}
                   </b>
                   <small style={{ color: "var(--text-secondary)", fontSize: "11px" }}>{opt.desc}</small>
@@ -301,11 +301,11 @@ export function Step2Conditions({ input, setInput, validationErrors = {}, onBack
                   style={{
                     padding: "14px",
                     borderColor: isSelected ? "var(--accent-green)" : undefined,
-                    background: isSelected ? "var(--accent-green-subtle)" : "var(--bg-input)"
+                    background: isSelected ? "var(--accent-green-subtle)" : "#FFFFFF"
                   }}
                   onClick={() => set("budget", b.id)}
                 >
-                  <b style={{ display: "block", color: isSelected ? "var(--accent-green)" : "#fff", fontSize: "13px" }}>
+                  <b style={{ display: "block", color: isSelected ? "var(--accent-green)" : "var(--color-primary-dark)", fontSize: "13px" }}>
                     {b.label}
                   </b>
                   <small style={{ color: "var(--text-secondary)", fontSize: "11px" }}>{b.desc}</small>

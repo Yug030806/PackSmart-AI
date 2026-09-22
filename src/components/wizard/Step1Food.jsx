@@ -186,11 +186,11 @@ export function Step1Food({ input, setInput, validationErrors = {}, onSelectFood
       </div>
 
       {/* Selected Food Properties Panel */}
-      <div className="glass-card" style={{ padding: "20px 24px", marginBottom: "28px", borderColor: "rgba(50, 213, 131, 0.3)" }}>
+      <div className="glass-card" style={{ padding: "20px 24px", marginBottom: "28px", borderColor: "var(--border-green)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
           <div>
             <span className="micro-label green">Selected Commodity Calibration</span>
-            <h4 style={{ fontSize: "17px", color: "#fff", margin: "2px 0 0" }}>
+            <h4 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: "2px 0 0" }}>
               {selectedFoodObj.name} ({selectedFoodObj.category})
             </h4>
           </div>

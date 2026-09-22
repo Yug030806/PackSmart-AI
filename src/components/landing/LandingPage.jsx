@@ -1,239 +1,271 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Sparkles, ArrowRight, ShieldCheck, Check, Database, Zap, Leaf,
-  Layers, Package, Wind, ChevronRight, User, Wrench, Crown, Key
+  ArrowRight, ShieldCheck, Check, Database, Zap, Leaf,
+  Layers, Package, Wind, ChevronRight, User, Wrench, Crown, Key,
+  Sliders, FileText, ArrowDown, Droplets, Clock, DollarSign, Truck
 } from "lucide-react";
 import { AnimatedNumber } from "../common/AnimatedNumber";
+import { PackagingVisualizer } from "../packaging/PackagingVisualizer";
 
 export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
+  // Subtle animation sequence for the visual workflow hero
+  const [activeWorkflowStep, setActiveWorkflowStep] = useState(0);
+
+  const workflowSteps = [
+    { num: "01", title: "Food Product", desc: "Moisture, lipid, respiration & pH matrix", icon: Droplets },
+    { num: "02", title: "Packaging Requirements", desc: "Shelf life, temperature & logistics constraints", icon: Clock },
+    { num: "03", title: "Material Analysis", desc: "OTR, WVTR & ASTM barrier calculations", icon: Wind },
+    { num: "04", title: "Shelf-Life / Safety", desc: "Kinetic Arrhenius & microbial simulation", icon: ShieldCheck },
+    { num: "05", title: "Cost + Sustainability", desc: "Polymer mass, unit economics & circularity", icon: Leaf },
+    { num: "06", title: "Recommended Package", desc: "Pareto-optimal substrate & gauge sizing", icon: Package }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveWorkflowStep(prev => (prev + 1) % workflowSteps.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, [workflowSteps.length]);
+
   return (
-    <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
-      {/* Hero Section */}
-      <section className="landing-hero">
-        <div className="hero-content">
-          <div className="micro-label green" style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(50, 213, 131, 0.1)", padding: "6px 14px", borderRadius: "9999px", marginBottom: "18px", border: "1px solid rgba(50, 213, 131, 0.25)" }}>
-            <Sparkles size={13} /> Barrier Physics + Scikit-Learn ML
+    <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+      {/* ================= HERO SECTION ================= */}
+      <section className="landing-hero-industrial">
+        <div style={{ textAlign: "center", maxWidth: "880px", margin: "0 auto" }}>
+          <div className="spec-tag green" style={{ marginBottom: "14px" }}>
+            <ShieldCheck size={12} /> Packaging Intelligence Platform
           </div>
 
-          <h1>
-            PACKSMART AI<br />
-            <span className="hero-highlight">Engineer better packaging.</span><br />
-            Predict its performance.
+          <h1 className="hero-main-title">
+            Choose the right package<br />
+            before production.
           </h1>
 
-          <p className="hero-subhead">
-            Intelligent food packaging optimization combining physical oxygen & water vapor barrier kinetics, shelf-life prediction, unit economics and circular sustainability.
+          <p className="hero-supporting-text">
+            Engineering-grade decision intelligence for shelf life, barrier kinetics, unit economics, and circularity.
           </p>
 
-          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-            <button className="btn btn-primary" style={{ padding: "14px 28px", fontSize: "15px" }} onClick={() => onNavigate("advisor")}>
-              Start Analysis <ArrowRight size={18} />
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap", marginBottom: "28px" }}>
+            <button
+              className="btn btn-primary"
+              style={{ padding: "13px 26px", fontSize: "14.5px" }}
+              onClick={() => onNavigate("workbench")}
+            >
+              Open Decision Workbench <ArrowRight size={17} />
             </button>
-            <button className="btn btn-secondary" style={{ padding: "14px 24px", fontSize: "15px" }} onClick={() => onNavigate("dashboard")}>
-              Explore Platform
+            <button
+              className="btn btn-secondary"
+              style={{ padding: "13px 22px", fontSize: "14.5px" }}
+              onClick={() => onNavigate("advisor")}
+            >
+              Start 5-Step Analysis
+            </button>
+            <button
+              className="btn btn-outline"
+              style={{ padding: "13px 20px", fontSize: "14.5px" }}
+              onClick={() => onNavigate("brainstorm")}
+            >
+              Packaging Brainstorm Canvas
             </button>
           </div>
 
-          <div style={{ display: "flex", gap: "20px", marginTop: "36px", flexWrap: "wrap", fontSize: "12.5px", color: "var(--text-secondary)" }}>
+          <div style={{ display: "flex", gap: "24px", justifyContent: "center", flexWrap: "wrap", fontSize: "12px", color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)", paddingTop: "16px" }}>
             <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <Check size={16} style={{ color: "var(--accent-green)" }} /> Real OTR (cc/m²·day) & WVTR (g/m²·day)
+              <Check size={15} style={{ color: "var(--accent-green)" }} /> ASTM Permeation Calibrated
             </span>
             <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <Check size={16} style={{ color: "var(--accent-green)" }} /> Deterministic PASS / FAIL validation
+              <Check size={15} style={{ color: "var(--accent-green)" }} /> Deterministic Verification
             </span>
             <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <Check size={16} style={{ color: "var(--accent-cyan)" }} /> MultiOutput Random Forest
+              <Check size={15} style={{ color: "var(--accent-green)" }} /> LCA & Spoilage Economics
             </span>
           </div>
         </div>
 
-        {/* Hero Scientific Packaging Visualization */}
-        <div className="hero-package-viz">
-          {/* Orbiting Particles & Gas molecules */}
-          <div style={{
-            position: "absolute",
-            width: "320px",
-            height: "320px",
-            borderRadius: "50%",
-            border: "1px dashed rgba(54, 191, 250, 0.2)",
-            animation: "spin-ring 24s linear infinite"
-          }} />
-          <div style={{
-            position: "absolute",
-            width: "260px",
-            height: "260px",
-            borderRadius: "50%",
-            border: "1px dashed rgba(50, 213, 131, 0.25)",
-            animation: "spin-ring 18s linear infinite reverse"
-          }} />
-
-          {/* Center Floating Packaging Container */}
-          <div className="hero-package-box">
-            <Package size={52} style={{ color: "var(--accent-green)" }} />
-            <div style={{ textAlign: "center" }}>
-              <b style={{ color: "#fff", fontSize: "13px", display: "block", fontFamily: "var(--font-heading)" }}>Hermetic Pouch</b>
-              <small style={{ color: "var(--accent-cyan)", fontSize: "10px", fontFamily: "var(--font-mono)" }}>Verified</small>
+        {/* Real Packaging Decision Workflow Hero */}
+        <div className="workflow-hero-container">
+          <div className="workflow-hero-header">
+            <div>
+              <span className="spec-tag green">Decision Pipeline</span>
+              <h3 style={{ fontSize: "17px", fontWeight: 700, margin: "2px 0 0", color: "var(--color-primary-dark)" }}>
+                The Packaging Engineering Workflow
+              </h3>
             </div>
-            <div style={{ display: "flex", gap: "4px" }}>
-              <span style={{ fontSize: "9px", background: "rgba(50, 213, 131, 0.15)", color: "var(--accent-green)", padding: "2px 6px", borderRadius: "4px" }}>
-                OTR: 1.5
-              </span>
-              <span style={{ fontSize: "9px", background: "rgba(54, 191, 250, 0.15)", color: "var(--accent-cyan)", padding: "2px 6px", borderRadius: "4px" }}>
-                WVTR: 0.6
-              </span>
-            </div>
+            <span style={{ fontSize: "11.5px", fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}>
+              Step {activeWorkflowStep + 1} of 6: <b>{workflowSteps[activeWorkflowStep].title}</b>
+            </span>
           </div>
 
-          {/* Technical metric cards positioned around */}
-          <div className="hero-metric-badge hero-badge-1">
-            <span style={{ color: "var(--accent-green)", fontWeight: 700 }}>OTR ↓</span>
-            <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>0.82 cc/m²·d</span>
-          </div>
+          <div className="workflow-steps-horizontal">
+            {workflowSteps.map((step, idx) => {
+              const StepIcon = step.icon;
+              const isActive = activeWorkflowStep === idx;
 
-          <div className="hero-metric-badge hero-badge-2">
-            <span style={{ color: "var(--accent-cyan)", fontWeight: 700 }}>WVTR ↓</span>
-            <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>0.45 g/m²·d</span>
-          </div>
+              return (
+                <React.Fragment key={step.num}>
+                  <div
+                    className={`workflow-step-card ${isActive ? "active" : ""}`}
+                    onClick={() => setActiveWorkflowStep(idx)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span className="step-card-num">{step.num}</span>
+                      <StepIcon size={14} style={{ color: isActive ? "var(--accent-green)" : "var(--text-muted)" }} />
+                    </div>
+                    <div className="step-card-title">{step.title}</div>
+                    <div className="step-card-desc">{step.desc}</div>
+                  </div>
 
-          <div className="hero-metric-badge hero-badge-3">
-            <span style={{ color: "var(--accent-green)", fontWeight: 700 }}>Shelf Life ↑</span>
-            <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>+45 days buffer</span>
+                  {idx < workflowSteps.length - 1 && (
+                    <div className="workflow-arrow-divider">
+                      <ChevronRight size={16} />
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </div>
-
-          <div className="hero-metric-badge hero-badge-4">
-            <span style={{ color: "var(--warning-amber)", fontWeight: 700 }}>CO₂ ↓</span>
-            <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>-159g LCA Credit</span>
-          </div>
-
-          {/* Floating Subtle Ambient Particles */}
-          <div style={{ position: "absolute", top: "25%", left: "15%", fontSize: "11px", fontFamily: "var(--font-mono)", color: "rgba(54, 191, 250, 0.6)", pointerEvents: "none" }}>O₂</div>
-          <div style={{ position: "absolute", top: "35%", right: "18%", fontSize: "11px", fontFamily: "var(--font-mono)", color: "rgba(50, 213, 131, 0.6)", pointerEvents: "none" }}>H₂O</div>
-          <div style={{ position: "absolute", bottom: "30%", left: "22%", fontSize: "11px", fontFamily: "var(--font-mono)", color: "rgba(245, 185, 66, 0.6)", pointerEvents: "none" }}>CO₂</div>
-          <div style={{ position: "absolute", bottom: "22%", right: "24%", fontSize: "11px", fontFamily: "var(--font-mono)", color: "rgba(255, 255, 255, 0.4)", pointerEvents: "none" }}>25°C · 60% RH</div>
         </div>
       </section>
 
-      {/* Real ML Pipeline Flow */}
-      <section style={{ margin: "50px 0 70px" }}>
-        <div style={{ textAlign: "center", marginBottom: "36px" }}>
-          <div className="micro-label cyan" style={{ marginBottom: "6px" }}>Scientific Architecture</div>
-          <h2 style={{ fontSize: "32px", fontWeight: 800 }}>
-            From <span style={{ color: "var(--accent-green)" }}>food chemistry</span> to verified barrier specs.
+      {/* ================= REAL-WORLD PACKAGING VISUALIZATION GALLERY ================= */}
+      <section style={{ margin: "20px 0 50px" }}>
+        <PackagingVisualizer
+          onSelectFormat={(format) => {
+            onNavigate("workbench");
+          }}
+        />
+      </section>
+
+      {/* ================= CORE ENGINEERING PILLARS ================= */}
+      <section style={{ margin: "50px 0", borderTop: "1px solid var(--border-subtle)", paddingTop: "40px" }}>
+        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+          <span className="spec-tag green" style={{ marginBottom: "6px" }}>
+            Technical Capabilities
+          </span>
+          <h2 style={{ fontSize: "28px", fontWeight: 800, color: "var(--color-primary-dark)" }}>
+            Engineered for real food manufacturing decisions.
           </h2>
-          <p style={{ maxWidth: "600px", margin: "10px auto 0", fontSize: "14px" }}>
-            The engine calculates maximum allowable oxygen absorption from lipid oxidation kinetics and moisture sorption isotherms.
+          <p style={{ maxWidth: "620px", margin: "6px auto 0", fontSize: "14px", color: "var(--text-secondary)" }}>
+            Replace guesswork with rigorous barrier kinetics, temperature sensitivity modeling, and total cost of ownership.
           </p>
         </div>
 
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(6, 1fr)",
-          gap: "12px",
-          background: "var(--bg-card)",
-          border: "1px solid var(--border-card)",
-          borderRadius: "var(--radius-xl)",
-          padding: "24px 20px"
-        }}>
-          {[
-            { step: "01", title: "User Input", desc: "Food chemistry & storage" },
-            { step: "02", title: "Preprocessing", desc: "Sorption isotherms" },
-            { step: "03", title: "ML Pipeline", desc: "MultiOutput Random Forest" },
-            { step: "04", title: "Barrier Check", desc: "OTR & WVTR pass/fail" },
-            { step: "05", title: "Optimization", desc: "Pareto & gauge sizing" },
-            { step: "06", title: "Recommendation", desc: "Explainable result" }
-          ].map((item, idx) => (
-            <div key={item.step} style={{ textAlign: "center", position: "relative" }}>
-              <div style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border-subtle)",
-                display: "grid",
-                placeItems: "center",
-                margin: "0 auto 10px",
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "var(--accent-green)"
-              }}>
-                {item.step}
-              </div>
-              <b style={{ display: "block", color: "#fff", fontSize: "13px", marginBottom: "4px" }}>{item.title}</b>
-              <small style={{ color: "var(--text-muted)", fontSize: "11px", lineHeight: "1.4", display: "block" }}>{item.desc}</small>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "18px" }}>
+          <div className="glass-card" style={{ padding: "22px" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "var(--accent-green-subtle)", display: "grid", placeItems: "center", color: "var(--accent-green)", marginBottom: "14px" }}>
+              <Wind size={20} />
             </div>
-          ))}
+            <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px", color: "var(--color-primary-dark)" }}>
+              ASTM Barrier Kinetics
+            </h3>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: "1.45" }}>
+              Calculates critical OTR and WVTR limits directly from food moisture sorption and lipid oxidation limits.
+            </p>
+          </div>
+
+          <div className="glass-card" style={{ padding: "22px" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "var(--bg-subtle)", display: "grid", placeItems: "center", color: "var(--color-primary-dark)", marginBottom: "14px" }}>
+              <Clock size={20} />
+            </div>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px", color: "var(--color-primary-dark)" }}>
+              Arrhenius Shelf-Life
+            </h3>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: "1.45" }}>
+              Simulates temperature abuse and humidity shifts across distribution networks with kinetic Q₁₀ rate modeling.
+            </p>
+          </div>
+
+          <div className="glass-card" style={{ padding: "22px" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "var(--warning-subtle)", display: "grid", placeItems: "center", color: "var(--warning-amber)", marginBottom: "14px" }}>
+              <DollarSign size={20} />
+            </div>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px", color: "var(--color-primary-dark)" }}>
+              Unit Economics
+            </h3>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: "1.45" }}>
+              Balances packaging substrate mass against food spoilage loss to find the true Pareto optimum per pack.
+            </p>
+          </div>
+
+          <div className="glass-card" style={{ padding: "22px" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "var(--accent-green-subtle)", display: "grid", placeItems: "center", color: "var(--accent-green)", marginBottom: "14px" }}>
+              <Leaf size={20} />
+            </div>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px", color: "var(--color-primary-dark)" }}>
+              Circularity & LCA
+            </h3>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: "1.45" }}>
+              Evaluates recyclability streams (RIC), polymer mass ratios, and cradle-to-gate carbon footprints.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* 3-Tier Role-Based Access Control Showcase */}
+      {/* ================= 3-TIER ROLE-BASED ACCESS CONTROL SHOWCASE ================= */}
       <section style={{
         borderTop: "1px solid var(--border-subtle)",
-        paddingTop: "60px",
-        marginBottom: "60px"
+        paddingTop: "50px",
+        marginBottom: "50px"
       }}>
-        <div style={{ textAlign: "center", marginBottom: "36px" }}>
-          <div className="micro-label green" style={{ marginBottom: "6px" }}>
-            <ShieldCheck size={13} style={{ display: "inline", marginRight: "4px" }} /> Enterprise Security Architecture
+        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+          <div className="spec-tag green" style={{ marginBottom: "6px" }}>
+            <ShieldCheck size={12} style={{ display: "inline", marginRight: "4px" }} /> Enterprise Governance
           </div>
-          <h2 style={{ fontSize: "32px", fontWeight: 800 }}>
-            3-Tier <span style={{ color: "var(--accent-green)" }}>Role-Based Access Control</span> (RBAC)
+          <h2 style={{ fontSize: "28px", fontWeight: 800, color: "var(--color-primary-dark)" }}>
+            3-Tier Role-Based Access Control
           </h2>
-          <p style={{ maxWidth: "600px", margin: "10px auto 0", fontSize: "14px" }}>
-            PackSmart AI enforces strict separation of concerns from laboratory researchers to enterprise system administrators.
+          <p style={{ maxWidth: "600px", margin: "6px auto 0", fontSize: "14px", color: "var(--text-secondary)" }}>
+            Separation of duties from packaging development to executive operations.
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "18px" }}>
           {/* User Card */}
-          <div className="glass-card" style={{ padding: "28px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div className="glass-card" style={{ padding: "22px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <User size={18} style={{ color: "var(--accent-green)" }} /> User
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "16px", fontWeight: 700, color: "var(--color-primary-dark)", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <User size={18} style={{ color: "var(--accent-green)" }} /> Packaging Engineer
                 </span>
-                <span className="badge-pass" style={{ fontSize: "10.5px" }}>Basic Access</span>
+                <span className="badge-pass">Tier 1</span>
               </div>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "18px" }}>
-                Use packaging advisor, compare materials, What-If simulator, recommendations, reports, and history.
+              <p style={{ fontSize: "12.5px", color: "var(--text-secondary)", marginBottom: "14px" }}>
+                Workbench, 5-step advisor, material comparison, simulator, and PDF reports.
               </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "24px" }}>
-                <span className="spec-chip">✓ Packaging Advisor</span>
-                <span className="spec-chip">✓ Compare Materials</span>
-                <span className="spec-chip">✓ What-If Simulator</span>
-                <span className="spec-chip">✓ Recommendations</span>
-                <span className="spec-chip">✓ Reports & History</span>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "18px" }}>
+                <span className="spec-chip">✓ Decision Workbench</span>
+                <span className="spec-chip">✓ Material Benchmarks</span>
+                <span className="spec-chip">✓ PDF Audits</span>
               </div>
             </div>
             <button
               className="btn btn-secondary"
               style={{ width: "100%", fontSize: "12.5px" }}
-              onClick={() => { onQuickSwitch("user"); onNavigate("advisor"); }}
+              onClick={() => { onQuickSwitch("user"); onNavigate("workbench"); }}
             >
-              Test User Persona
+              Test Packaging Engineer Persona
             </button>
           </div>
 
           {/* System Manager Card */}
-          <div className="glass-card" style={{ padding: "28px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div className="glass-card" style={{ padding: "22px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <Wrench size={18} style={{ color: "var(--accent-cyan)" }} /> System Manager
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "16px", fontWeight: 700, color: "var(--color-primary-dark)", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Wrench size={18} style={{ color: "var(--accent-cyan)" }} /> Quality & Operations
                 </span>
-                <span className="badge-pass" style={{ fontSize: "10.5px", background: "rgba(54, 191, 250, 0.12)", color: "var(--accent-cyan)", borderColor: "rgba(54, 191, 250, 0.35)" }}>
-                  Management Access
+                <span className="badge-pass" style={{ background: "var(--accent-cyan-subtle)", color: "var(--accent-cyan)", borderColor: "rgba(47, 106, 136, 0.3)" }}>
+                  Tier 2
                 </span>
               </div>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "18px" }}>
-                Everything a User can do + manage users, food/material data, recommendations, reports, and application settings.
+              <p style={{ fontSize: "12.5px", color: "var(--text-secondary)", marginBottom: "14px" }}>
+                All engineer tools plus catalog management, food presets, and team audits.
               </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "24px" }}>
-                <span className="spec-chip">✓ All User Privileges</span>
-                <span className="spec-chip">✓ Manage Users</span>
-                <span className="spec-chip">✓ Food/Material Catalogs</span>
-                <span className="spec-chip">✓ Recommendations & Reports</span>
-                <span className="spec-chip">✓ Application Settings</span>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "18px" }}>
+                <span className="spec-chip">✓ All Engineer Privileges</span>
+                <span className="spec-chip">✓ Catalog Management</span>
+                <span className="spec-chip">✓ Operational Audits</span>
               </div>
             </div>
             <button
@@ -241,28 +273,26 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
               style={{ width: "100%", fontSize: "12.5px" }}
               onClick={() => { onQuickSwitch("system_manager"); onNavigate("management"); }}
             >
-              Test System Manager Persona
+              Test Operations Manager Persona
             </button>
           </div>
 
           {/* Super Admin Card */}
-          <div className="glass-card" style={{ padding: "28px", display: "flex", flexDirection: "column", justifyContent: "space-between", borderColor: "rgba(245, 185, 66, 0.35)" }}>
+          <div className="glass-card" style={{ padding: "22px", display: "flex", flexDirection: "column", justifyContent: "space-between", borderColor: "rgba(213, 154, 56, 0.4)" }}>
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <Crown size={18} style={{ color: "var(--warning-amber)" }} /> Super Admin
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "16px", fontWeight: 700, color: "var(--color-primary-dark)", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Crown size={18} style={{ color: "var(--warning-amber)" }} /> Super Administrator
                 </span>
-                <span className="badge-marginal" style={{ fontSize: "10.5px" }}>Full System Access</span>
+                <span className="badge-marginal">Tier 3</span>
               </div>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "18px" }}>
-                Unrestricted root access: manage System Managers, roles/permissions, system configuration, security, and complete database access.
+              <p style={{ fontSize: "12.5px", color: "var(--text-secondary)", marginBottom: "14px" }}>
+                Root system controls: user provisioning, security policies, and database access.
               </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "24px" }}>
-                <span className="spec-chip">✓ Manage Users & Managers</span>
-                <span className="spec-chip">✓ Roles & Permissions Matrix</span>
-                <span className="spec-chip">✓ Activity & Audit Logs</span>
-                <span className="spec-chip">✓ Security & MFA Policies</span>
-                <span className="spec-chip" style={{ color: "var(--warning-amber)" }}>★ Complete Database Access</span>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "18px" }}>
+                <span className="spec-chip">✓ User Provisioning</span>
+                <span className="spec-chip">✓ 17-Point Permissions</span>
+                <span className="spec-chip" style={{ color: "var(--warning-amber)" }}>★ Root Database</span>
               </div>
             </div>
             <button
@@ -275,7 +305,7 @@ export function LandingPage({ onNavigate, onQuickSwitch, backendHealthy }) {
           </div>
         </div>
 
-        <div style={{ textAlign: "center", marginTop: "28px" }}>
+        <div style={{ textAlign: "center", marginTop: "24px" }}>
           <button className="btn btn-outline" onClick={() => onNavigate("login")}>
             <Key size={14} /> Open Full RBAC Authentication Gateway →
           </button>

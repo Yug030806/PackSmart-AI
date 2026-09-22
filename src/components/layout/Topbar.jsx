@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, Menu, Shield, User, Wrench, Crown, Bell } from "lucide-react";
+import { ShieldCheck, Menu, Shield, User, Wrench, Crown, Bell, Sliders } from "lucide-react";
 
 export function Topbar({
   currentPage,
@@ -12,10 +12,12 @@ export function Topbar({
   const getPageTitle = (p) => {
     switch (p) {
       case "dashboard": return "Command Center";
+      case "workbench": return "Packaging Decision Workbench";
       case "advisor": return "Packaging Analysis Wizard";
       case "advisor-result": return "Recommendation & Technical Audit";
+      case "brainstorm": return "Packaging Brainstorm Whiteboard";
       case "simulator": return "What-If Degradation Simulator";
-      case "compare": return "Materials Comparison";
+      case "compare": return "Materials Benchmark Matrix";
       case "database": return "Knowledge Base & Food Chemistry";
       case "history": return "My Analyses & Reports";
       case "management": return "Operations & Management Portal";
@@ -39,10 +41,10 @@ export function Topbar({
         </button>
 
         <div>
-          <div className="micro-label" style={{ color: "var(--accent-green)", display: "flex", alignItems: "center", gap: "6px" }}>
-            <Sparkles size={11} /> Permeation Engine
+          <div className="micro-label green" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <ShieldCheck size={11} /> ASTM Permeation Laboratory
           </div>
-          <h2 style={{ fontSize: "16px", fontWeight: 700, margin: 0 }}>
+          <h2 style={{ fontSize: "16px", fontWeight: 700, margin: 0, color: "var(--color-primary-dark)" }}>
             {getPageTitle(currentPage)}
           </h2>
         </div>
@@ -50,21 +52,21 @@ export function Topbar({
 
       <div className="topbar-right">
         {/* 1-Click Role Quick-Switching Pills for seamless grading/demoing */}
-        <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "var(--bg-input)", padding: "3px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#FFFFFF", padding: "3px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
           <button
             className="btn btn-ghost"
             style={{
               padding: "4px 8px",
               fontSize: "11px",
               fontWeight: 600,
-              borderRadius: "6px",
-              background: currentUser?.role === "user" ? "rgba(50, 213, 131, 0.18)" : "transparent",
+              borderRadius: "5px",
+              background: currentUser?.role === "user" ? "var(--accent-green-subtle)" : "transparent",
               color: currentUser?.role === "user" ? "var(--accent-green)" : "var(--text-muted)"
             }}
             onClick={() => onQuickSwitch("user")}
-            title="Switch persona to Standard User"
+            title="Switch persona to Packaging Engineer"
           >
-            User
+            Engineer
           </button>
           <button
             className="btn btn-ghost"
@@ -72,8 +74,8 @@ export function Topbar({
               padding: "4px 8px",
               fontSize: "11px",
               fontWeight: 600,
-              borderRadius: "6px",
-              background: currentUser?.role === "system_manager" ? "rgba(54, 191, 250, 0.18)" : "transparent",
+              borderRadius: "5px",
+              background: currentUser?.role === "system_manager" ? "var(--accent-cyan-subtle)" : "transparent",
               color: currentUser?.role === "system_manager" ? "var(--accent-cyan)" : "var(--text-muted)"
             }}
             onClick={() => onQuickSwitch("system_manager")}
@@ -87,8 +89,8 @@ export function Topbar({
               padding: "4px 8px",
               fontSize: "11px",
               fontWeight: 600,
-              borderRadius: "6px",
-              background: currentUser?.role === "super_admin" ? "rgba(245, 185, 66, 0.18)" : "transparent",
+              borderRadius: "5px",
+              background: currentUser?.role === "super_admin" ? "var(--warning-subtle)" : "transparent",
               color: currentUser?.role === "super_admin" ? "var(--warning-amber)" : "var(--text-muted)"
             }}
             onClick={() => onQuickSwitch("super_admin")}
@@ -98,13 +100,23 @@ export function Topbar({
           </button>
         </div>
 
+        {currentPage !== "workbench" && (
+          <button
+            className="btn btn-secondary"
+            style={{ padding: "6px 12px", fontSize: "12px" }}
+            onClick={() => onNavigate("workbench")}
+          >
+            <Sliders size={13} /> Workbench
+          </button>
+        )}
+
         {currentPage !== "advisor" && (
           <button
             className="btn btn-primary"
-            style={{ padding: "7px 14px", fontSize: "12px" }}
+            style={{ padding: "6px 14px", fontSize: "12px" }}
             onClick={() => onNavigate("advisor")}
           >
-            <Sparkles size={14} /> + New Analysis
+            + New Analysis
           </button>
         )}
       </div>

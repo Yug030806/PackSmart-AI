@@ -45,7 +45,7 @@ export function ProgressRing({
         />
       </svg>
       <div className="progress-ring-center">
-        <div style={{ fontFamily: "var(--font-heading)", fontSize: "28px", fontWeight: 800, color: "#fff", lineHeight: 1 }}>
+        <div style={{ fontFamily: "var(--font-heading)", fontSize: "28px", fontWeight: 800, color: "var(--color-primary-dark)", lineHeight: 1 }}>
           <AnimatedNumber value={value} suffix="%" />
         </div>
         {label && (

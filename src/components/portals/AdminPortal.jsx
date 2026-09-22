@@ -48,8 +48,8 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
   if (!isSuperAdmin) {
     return (
       <div className="glass-card" style={{ maxWidth: "560px", margin: "40px auto", padding: "40px 24px", textAlign: "center" }}>
-        <Crown size={48} style={{ color: "var(--warning-amber)", margin: "0 auto 16px" }} />
-        <h2 style={{ color: "#fff", marginBottom: "8px" }}>Super Admin Access Required</h2>
+        <Crown size={48} style={{ color: "var(--color-warning-amber)", margin: "0 auto 16px" }} />
+        <h2 style={{ color: "var(--color-primary-dark)", marginBottom: "8px" }}>Super Admin Access Required</h2>
         <p style={{ color: "var(--text-secondary)", fontSize: "13.5px", marginBottom: "24px" }}>
           The Super Admin Console gives unrestricted access to security controls, user management, and system configuration.
         </p>
@@ -276,7 +276,7 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
         <div className="glass-card" style={{ padding: "24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
             <div>
-              <h3 style={{ fontSize: "17px", color: "#fff", margin: 0 }}>Manage User Accounts</h3>
+              <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: 0 }}>Manage User Accounts</h3>
               <p style={{ fontSize: "12.5px", color: "var(--text-secondary)", margin: "2px 0 0" }}>
                 Super Admin capability: modify roles, elevate system managers, or suspend accounts.
               </p>
@@ -287,7 +287,7 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
           </div>
 
           {showAddUser && (
-            <form onSubmit={handleAddUser} style={{ background: "var(--bg-input)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)", marginBottom: "18px" }}>
+            <form onSubmit={handleAddUser} style={{ background: "var(--color-bg-base)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)", marginBottom: "18px" }}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr) auto", gap: "10px", alignItems: "flex-end" }}>
                 <div className="field" style={{ margin: 0 }}>
                   <label>Full Name</label>
@@ -313,7 +313,7 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px", textAlign: "left" }}>
               <thead>
-                <tr style={{ borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
+                <tr style={{ borderBottom: "1px solid var(--border-color)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
                   <th style={{ padding: "12px 10px" }}>USER IDENTITY</th>
                   <th style={{ padding: "12px 10px" }}>EMAIL</th>
                   <th style={{ padding: "12px 10px" }}>ACCESS LEVEL</th>
@@ -324,19 +324,19 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
               </thead>
               <tbody>
                 {users.map(u => (
-                  <tr key={u.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)" }}>
+                  <tr key={u.id} style={{ borderBottom: "1px solid var(--border-color)" }}>
                     <td style={{ padding: "12px 10px" }}>
-                      <b style={{ color: "#fff" }}>{u.name}</b>
+                      <b style={{ color: "var(--color-primary-dark)" }}>{u.name}</b>
                       <small style={{ color: "var(--text-muted)", display: "block", fontSize: "10px" }}>{u.id}</small>
                     </td>
                     <td style={{ padding: "12px 10px", color: "var(--text-secondary)" }}>{u.email}</td>
                     <td style={{ padding: "12px 10px" }}>
-                      <span className="spec-chip" style={{ color: u.role === "super_admin" ? "var(--warning-amber)" : u.role === "system_manager" ? "var(--accent-cyan)" : "var(--accent-green)" }}>
+                      <span className="spec-chip" style={{ color: u.role === "super_admin" ? "var(--color-warning-amber)" : u.role === "system_manager" ? "var(--color-data-slate)" : "var(--color-muted-green)" }}>
                         {u.access_level} Access
                       </span>
                     </td>
                     <td style={{ padding: "12px 10px" }}>
-                      <span style={{ color: u.status === "Active" ? "var(--accent-green)" : "var(--error-red)", fontWeight: 700, fontSize: "11px" }}>
+                      <span style={{ color: u.status === "Active" ? "var(--color-muted-green)" : "var(--color-risk-red)", fontWeight: 700, fontSize: "11px" }}>
                         {u.status === "Active" ? "● Active" : "○ Suspended"}
                       </span>
                     </td>
@@ -344,7 +344,7 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
                       <select
                         value={u.role}
                         onChange={e => handleRoleChange(u.id, e.target.value)}
-                        style={{ background: "var(--bg-input)", border: "1px solid var(--border-subtle)", borderRadius: "6px", color: "#fff", padding: "4px 8px", fontSize: "11.5px" }}
+                        style={{ background: "#FFFFFF", border: "1px solid var(--border-color)", borderRadius: "6px", color: "var(--color-primary-dark)", padding: "4px 8px", fontSize: "11.5px" }}
                       >
                         <option value="user">User</option>
                         <option value="system_manager">System Manager</option>
@@ -371,12 +371,12 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
       {/* Tab 2: Roles Matrix */}
       {activeTab === "roles" && (
         <div className="glass-card" style={{ padding: "24px", overflowX: "auto" }}>
-          <h3 style={{ fontSize: "17px", color: "#fff", marginBottom: "14px" }}>
+          <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", marginBottom: "14px" }}>
             17-Point Role & Permission Entitlement Matrix
           </h3>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px", textAlign: "left" }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
+              <tr style={{ borderBottom: "1px solid var(--border-color)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "11px" }}>
                 <th style={{ padding: "12px 10px" }}>SYSTEM PRIVILEGE</th>
                 <th style={{ padding: "12px 10px" }}>CATEGORY</th>
                 <th style={{ padding: "12px 10px", textAlign: "center" }}>USER</th>
@@ -386,20 +386,20 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
             </thead>
             <tbody>
               {PERMISSIONS_MATRIX.map(perm => (
-                <tr key={perm.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)" }}>
+                <tr key={perm.id} style={{ borderBottom: "1px solid var(--border-color)" }}>
                   <td style={{ padding: "10px" }}>
-                    <b style={{ color: "#fff" }}>{perm.name}</b>
+                    <b style={{ color: "var(--color-primary-dark)" }}>{perm.name}</b>
                     <div style={{ fontSize: "10.5px", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>{perm.id}</div>
                   </td>
                   <td style={{ padding: "10px", color: "var(--text-secondary)" }}>{perm.category}</td>
                   <td style={{ padding: "10px", textAlign: "center" }}>
-                    {perm.user ? <CheckCircle2 size={16} style={{ color: "var(--accent-green)", margin: "0 auto" }} /> : <XCircle size={16} style={{ color: "var(--text-muted)", margin: "0 auto" }} />}
+                    {perm.user ? <CheckCircle2 size={16} style={{ color: "var(--color-muted-green)", margin: "0 auto" }} /> : <XCircle size={16} style={{ color: "var(--text-muted)", margin: "0 auto" }} />}
                   </td>
                   <td style={{ padding: "10px", textAlign: "center" }}>
-                    {perm.manager ? <CheckCircle2 size={16} style={{ color: "var(--accent-cyan)", margin: "0 auto" }} /> : <XCircle size={16} style={{ color: "var(--text-muted)", margin: "0 auto" }} />}
+                    {perm.manager ? <CheckCircle2 size={16} style={{ color: "var(--color-data-slate)", margin: "0 auto" }} /> : <XCircle size={16} style={{ color: "var(--text-muted)", margin: "0 auto" }} />}
                   </td>
                   <td style={{ padding: "10px", textAlign: "center" }}>
-                    <CheckCircle2 size={16} style={{ color: "var(--warning-amber)", margin: "0 auto" }} />
+                    <CheckCircle2 size={16} style={{ color: "var(--color-warning-amber)", margin: "0 auto" }} />
                   </td>
                 </tr>
               ))}
@@ -412,11 +412,11 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
       {activeTab === "logs" && (
         <div className="glass-card" style={{ padding: "24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-            <h3 style={{ fontSize: "17px", color: "#fff", margin: 0 }}>System Security & Activity Audit Trail</h3>
+            <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: 0 }}>System Security & Activity Audit Trail</h3>
             <select
               value={logFilter}
               onChange={e => setLogFilter(e.target.value)}
-              style={{ background: "var(--bg-input)", border: "1px solid var(--border-subtle)", color: "#fff", padding: "6px 10px", borderRadius: "6px", fontSize: "12px" }}
+              style={{ background: "#FFFFFF", border: "1px solid var(--border-color)", color: "var(--color-primary-dark)", padding: "6px 10px", borderRadius: "6px", fontSize: "12px" }}
             >
               <option value="ALL">All Event Types</option>
               <option value="AUTH_LOGIN">AUTH_LOGIN</option>
@@ -430,10 +430,10 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
 
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {filteredLogs.map(log => (
-              <div key={log.id} style={{ background: "var(--bg-input)", padding: "12px", borderRadius: "8px", border: "1px solid var(--border-subtle)", display: "grid", gridTemplateColumns: "160px 180px 140px 1fr", gap: "10px", fontSize: "12px", alignItems: "center" }}>
+              <div key={log.id} style={{ background: "var(--color-bg-base)", padding: "12px", borderRadius: "8px", border: "1px solid var(--border-color)", display: "grid", gridTemplateColumns: "160px 180px 140px 1fr", gap: "10px", fontSize: "12px", alignItems: "center" }}>
                 <span style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>{log.timestamp}</span>
-                <span style={{ color: "#fff" }}>{log.user}</span>
-                <span className="spec-chip" style={{ color: "var(--accent-cyan)", width: "fit-content" }}>{log.action}</span>
+                <span style={{ color: "var(--color-primary-dark)", fontWeight: 600 }}>{log.user}</span>
+                <span className="spec-chip" style={{ color: "var(--color-data-slate)", width: "fit-content" }}>{log.action}</span>
                 <span style={{ color: "var(--text-secondary)" }}>{log.details}</span>
               </div>
             ))}
@@ -444,11 +444,11 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
       {/* Tab 4: Security & System Config */}
       {activeTab === "security" && (
         <div className="glass-card" style={{ padding: "28px" }}>
-          <h3 style={{ fontSize: "17px", color: "#fff", marginBottom: "18px" }}>System Configuration & Security Controls</h3>
+          <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", marginBottom: "18px" }}>System Configuration & Security Controls</h3>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
-            <div style={{ background: "var(--bg-input)", padding: "20px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
-              <h4 style={{ fontSize: "15px", color: "var(--accent-cyan)", marginBottom: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
+            <div style={{ background: "var(--color-bg-base)", padding: "20px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)" }}>
+              <h4 style={{ fontSize: "15px", color: "var(--color-data-slate)", marginBottom: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
                 <Lock size={15} /> Authentication & Security Policies
               </h4>
 
@@ -466,16 +466,16 @@ export function AdminPortal({ currentUser, onNavigate, onQuickSwitch, authToken 
                 <input type="number" value={rateLimit} onChange={e => setRateLimit(Number(e.target.value))} />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "10px", borderTop: "1px solid var(--border-subtle)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "10px", borderTop: "1px solid var(--border-color)" }}>
                 <div>
-                  <b style={{ color: "#fff", fontSize: "13px", display: "block" }}>Enforce Multi-Factor Authentication</b>
+                  <b style={{ color: "var(--color-primary-dark)", fontSize: "13px", display: "block" }}>Enforce Multi-Factor Authentication</b>
                   <small style={{ color: "var(--text-muted)", fontSize: "11px" }}>Require TOTP for admin accounts</small>
                 </div>
                 <input
                   type="checkbox"
                   checked={mfaEnforced}
                   onChange={e => setMfaEnforced(e.target.checked)}
-                  style={{ width: "18px", height: "18px", accentColor: "var(--accent-green)" }}
+                  style={{ width: "18px", height: "18px", accentColor: "var(--color-muted-green)" }}
                 />
               </div>
             </div>

@@ -63,7 +63,7 @@ export function ServerStatusBanner({
             </div>
 
             <div>
-              <b style={{ color: "#fff", fontSize: "14px", display: "block" }}>
+              <b style={{ color: "var(--color-primary-dark)", fontSize: "14px", display: "block" }}>
                 {isAuthExpired
                   ? "Authentication Session Expired"
                   : isTimeout
@@ -146,7 +146,7 @@ export function ServerStatusBanner({
               <div>• Fallback Engine: <b style={{ color: "var(--accent-green)" }}>Active (Fickian Kinetics)</b></div>
             </div>
             <div style={{ color: "var(--text-muted)", fontSize: "11px" }}>
-              <b>Troubleshooting:</b> Ensure the FastAPI backend is running via <code style={{ color: "#fff" }}>source .venv/bin/activate && python backend/run.py</code>. If you are behind a corporate proxy or firewall, check port 8000.
+              <b>Troubleshooting:</b> Ensure the FastAPI backend is running via <code style={{ color: "var(--color-primary-dark)" }}>source .venv/bin/activate && python backend/run.py</code>. If you are behind a corporate proxy or firewall, check port 8000.
             </div>
           </div>
         )}

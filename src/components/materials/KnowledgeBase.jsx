@@ -83,18 +83,18 @@ export function KnowledgeBase() {
               </div>
 
               <div>
-                <h3 style={{ fontSize: "16px", color: "#fff", margin: "0 0 4px" }}>{m.name}</h3>
+                <h3 style={{ fontSize: "16px", color: "var(--color-primary-dark)", margin: "0 0 4px" }}>{m.name}</h3>
                 <small style={{ color: "var(--text-secondary)", fontSize: "12px" }}>Gauge: {m.thickness} · Embodied Carbon: {m.carbon} kg CO₂e/kg</small>
               </div>
 
               <div className="barrier-metric-row">
                 <div className="barrier-metric-val">
                   <span>Barrier OTR</span>
-                  <b>{m.nominal_otr} <small style={{ fontSize: "10px", color: "var(--text-muted)" }}>cc/m²·d</small></b>
+                  <b>{m.nominal_otr} <small style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 400 }}>cc/m²·d</small></b>
                 </div>
                 <div className="barrier-metric-val">
                   <span>Barrier WVTR</span>
-                  <b>{m.nominal_wvtr} <small style={{ fontSize: "10px", color: "var(--text-muted)" }}>g/m²·d</small></b>
+                  <b>{m.nominal_wvtr} <small style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 400 }}>g/m²·d</small></b>
                 </div>
               </div>
 
@@ -113,30 +113,30 @@ export function KnowledgeBase() {
           {filteredFoods.map(([k, f]) => (
             <div key={k} className="glass-card" style={{ padding: "22px", display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <span className="spec-chip" style={{ color: "var(--accent-green)", borderColor: "rgba(50, 213, 131, 0.25)" }}>
+                <span className="spec-chip" style={{ color: "var(--accent-green)", borderColor: "rgba(63, 118, 88, 0.25)" }}>
                   {f.category}
                 </span>
               </div>
 
               <div>
-                <h3 style={{ fontSize: "17px", color: "#fff", margin: "0 0 4px" }}>{f.name}</h3>
+                <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: "0 0 4px" }}>{f.name}</h3>
                 <small style={{ color: "var(--text-secondary)", fontSize: "12px" }}>
                   Storage: {f.storage} · Target Shelf-Life: {f.shelf} days
                 </small>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", background: "var(--bg-input)", padding: "10px", borderRadius: "var(--radius-md)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", background: "var(--bg-subtle)", border: "1px solid var(--border-subtle)", padding: "10px", borderRadius: "var(--radius-md)" }}>
                 <div>
                   <span className="micro-label">Moisture</span>
-                  <b style={{ display: "block", color: "#fff", fontSize: "14px", marginTop: "2px" }}>{f.moisture}%</b>
+                  <b style={{ display: "block", color: "var(--color-primary-dark)", fontSize: "14px", marginTop: "2px" }}>{f.moisture}%</b>
                 </div>
                 <div>
                   <span className="micro-label">Lipid (Fat)</span>
-                  <b style={{ display: "block", color: "#fff", fontSize: "14px", marginTop: "2px" }}>{f.fat}%</b>
+                  <b style={{ display: "block", color: "var(--color-primary-dark)", fontSize: "14px", marginTop: "2px" }}>{f.fat}%</b>
                 </div>
                 <div>
                   <span className="micro-label">Acidity pH</span>
-                  <b style={{ display: "block", color: "#fff", fontSize: "14px", marginTop: "2px" }}>{f.ph}</b>
+                  <b style={{ display: "block", color: "var(--color-primary-dark)", fontSize: "14px", marginTop: "2px" }}>{f.ph}</b>
                 </div>
               </div>
 

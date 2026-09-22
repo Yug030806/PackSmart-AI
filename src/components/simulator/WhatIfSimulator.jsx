@@ -150,7 +150,7 @@ export function WhatIfSimulator({ input }) {
         <div style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: "24px" }}>
           {/* Controls Form Card */}
           <div className="glass-card" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "18px" }}>
-            <h3 style={{ fontSize: "17px", color: "#fff" }}>Simulation Variables</h3>
+            <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)" }}>Simulation Variables</h3>
 
             <div className="field">
               <label>Packaging Candidate Film</label>
@@ -215,8 +215,8 @@ export function WhatIfSimulator({ input }) {
           <div className="glass-card" style={{ padding: "24px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <div>
-                <span className="micro-label green">Predicted Kinetic Impact</span>
-                <h3 style={{ fontSize: "18px", color: "#fff", margin: "2px 0 0" }}>
+                <span className="spec-tag green">Predicted Kinetic Impact</span>
+                <h3 style={{ fontSize: "18px", color: "var(--color-primary-dark)", margin: "4px 0 0" }}>
                   Scenario Outcome: {selectedMat.name}
                 </h3>
               </div>
@@ -227,15 +227,15 @@ export function WhatIfSimulator({ input }) {
 
             {/* Before / After Diff Counters */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px", marginBottom: "24px" }}>
-              <div style={{ background: "var(--bg-input)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ background: "var(--bg-subtle)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
                 <span className="micro-label">Baseline Target</span>
-                <b style={{ display: "block", color: "#fff", fontSize: "22px", margin: "6px 0 2px" }}>
+                <b style={{ display: "block", color: "var(--color-primary-dark)", fontSize: "22px", margin: "6px 0 2px" }}>
                   {baseShelf} days
                 </b>
                 <small style={{ color: "var(--text-muted)", fontSize: "11px" }}>Original goal</small>
               </div>
 
-              <div style={{ background: "var(--bg-input)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ background: "var(--bg-subtle)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
                 <span className="micro-label">Simulated Shelf Life</span>
                 <b style={{ display: "block", color: simResult?.target_achievable ? "var(--accent-green)" : "var(--error-red)", fontSize: "22px", margin: "6px 0 2px" }}>
                   {simResult?.predicted_shelf_life_days} days
@@ -246,7 +246,7 @@ export function WhatIfSimulator({ input }) {
                 </div>
               </div>
 
-              <div style={{ background: "var(--bg-input)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ background: "var(--bg-subtle)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
                 <span className="micro-label">Limiting Mechanism</span>
                 <b style={{ display: "block", color: "var(--warning-amber)", fontSize: "16px", margin: "6px 0 2px" }}>
                   {simResult?.limiting_degradation_factor}
@@ -261,26 +261,26 @@ export function WhatIfSimulator({ input }) {
               <div style={{ height: "240px", width: "100%" }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="name" stroke="#6C7D77" fontSize={11} />
-                    <YAxis stroke="#6C7D77" fontSize={11} unit=" d" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#DDE4DC" />
+                    <XAxis dataKey="name" stroke="#73847A" fontSize={11} />
+                    <YAxis stroke="#73847A" fontSize={11} unit=" d" />
                     <Tooltip
                       contentStyle={{
-                        background: "#0D1B18",
-                        border: "1px solid rgba(50, 213, 131, 0.3)",
+                        background: "#FFFFFF",
+                        border: "1px solid #DDE4DC",
                         borderRadius: "8px",
                         fontSize: "12px",
-                        color: "#fff"
+                        color: "#17221D"
                       }}
                     />
-                    <Bar dataKey="days" name="Days to Failure / Goal" fill="#32D583" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="days" name="Days to Failure / Goal" fill="#3F7658" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            <div style={{ background: "rgba(245, 185, 66, 0.08)", border: "1px solid rgba(245, 185, 66, 0.25)", borderRadius: "var(--radius-md)", padding: "12px 14px", fontSize: "12px", color: "#f7d288", display: "flex", gap: "10px" }}>
-              <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: "2px" }} />
+            <div style={{ background: "rgba(213, 154, 56, 0.10)", border: "1px solid rgba(213, 154, 56, 0.35)", borderRadius: "var(--radius-md)", padding: "12px 14px", fontSize: "12px", color: "var(--color-primary-dark)", display: "flex", gap: "10px" }}>
+              <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: "2px", color: "var(--warning-amber)" }} />
               <div>
                 <b>Scientific Notice:</b> {simResult?.scientific_validation_disclaimer}
               </div>
@@ -347,7 +347,7 @@ function ProduceRespirationTab({ initialInput }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: "24px" }}>
       <div className="glass-card" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-        <h3 style={{ fontSize: "17px", color: "#fff" }}>Produce Respiration Parameters</h3>
+        <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)" }}>Produce Respiration Parameters</h3>
 
         <div className="field">
           <label>Produce Species</label>
@@ -364,16 +364,16 @@ function ProduceRespirationTab({ initialInput }) {
           </select>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderTop: "1px solid var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderTop: "1px solid var(--border-color)", borderBottom: "1px solid var(--border-color)" }}>
           <div>
-            <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff", display: "block" }}>Fresh-Cut / Sliced</span>
+            <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary-dark)", display: "block" }}>Fresh-Cut / Sliced</span>
             <small style={{ color: "var(--text-muted)", fontSize: "11px" }}>Wound respiration & browning</small>
           </div>
           <input
             type="checkbox"
             checked={isCut}
             onChange={e => setIsCut(e.target.checked)}
-            style={{ width: "18px", height: "18px", accentColor: "var(--accent-green)" }}
+            style={{ width: "18px", height: "18px", accentColor: "var(--color-muted-green)" }}
           />
         </div>
 
@@ -408,7 +408,7 @@ function ProduceRespirationTab({ initialInput }) {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
               <div>
                 <span className="micro-label green">Kinetic Decision</span>
-                <h3 style={{ fontSize: "20px", color: "#fff", margin: "2px 0 0" }}>{resResult.produce_name}</h3>
+                <h3 style={{ fontSize: "20px", color: "var(--color-primary-dark)", margin: "2px 0 0" }}>{resResult.produce_name}</h3>
                 <small style={{ color: "var(--text-secondary)" }}>
                   Q₁₀ Temperature Scaling: {resResult.temperature_scaling_factor_q10}x at {temp}°C
                 </small>
@@ -426,23 +426,23 @@ function ProduceRespirationTab({ initialInput }) {
                   <div
                     key={opt.option_type}
                     style={{
-                      background: isSelected ? "var(--accent-green-subtle)" : "var(--bg-input)",
-                      border: isSelected ? "1px solid var(--accent-green)" : "1px solid var(--border-subtle)",
+                      background: isSelected ? "rgba(63, 118, 88, 0.12)" : "var(--color-bg-base)",
+                      border: isSelected ? "1.5px solid var(--color-muted-green)" : "1px solid var(--border-color)",
                       borderRadius: "var(--radius-md)",
                       padding: "12px",
                       position: "relative"
                     }}
                   >
-                    <span className="micro-label" style={{ color: isSelected ? "var(--accent-green)" : "var(--text-muted)" }}>
+                    <span className="micro-label" style={{ color: isSelected ? "var(--color-muted-green)" : "var(--text-muted)" }}>
                       {isSelected ? "★ RECOMMENDED" : "Candidate"}
                     </span>
-                    <b style={{ display: "block", color: "#fff", fontSize: "13px", margin: "4px 0 2px" }}>
+                    <b style={{ display: "block", color: "var(--color-primary-dark)", fontSize: "13px", margin: "4px 0 2px" }}>
                       {opt.option_type}
                     </b>
                     <small style={{ color: "var(--text-secondary)", fontSize: "11px", display: "block" }}>
                       OTR: {opt.nominal_otr_cc_m2_day} cc
                     </small>
-                    <span style={{ fontSize: "10px", color: opt.status === "OPTIMAL" ? "var(--accent-green)" : "var(--warning-amber)", fontWeight: 700, marginTop: "6px", display: "block" }}>
+                    <span style={{ fontSize: "10px", color: opt.status === "OPTIMAL" ? "var(--color-muted-green)" : "var(--color-warning-amber)", fontWeight: 700, marginTop: "6px", display: "block" }}>
                       {opt.status === "OPTIMAL" ? "✓ Optimal Match" : opt.status?.replace("FAIL_", "⚠ ")}
                     </span>
                   </div>
@@ -451,32 +451,32 @@ function ProduceRespirationTab({ initialInput }) {
             </div>
 
             {/* Decision Rationale */}
-            <div style={{ padding: "12px 14px", background: "var(--bg-input)", borderRadius: "var(--radius-md)", fontSize: "12px", color: "var(--text-secondary)", lineHeight: "1.6", marginBottom: "18px" }}>
-              <b>Physiological Rationale:</b> {resResult.decision_rationale}
+            <div style={{ padding: "12px 14px", background: "var(--color-bg-base)", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", fontSize: "12px", color: "var(--text-secondary)", lineHeight: "1.6", marginBottom: "18px" }}>
+              <b style={{ color: "var(--color-primary-dark)" }}>Physiological Rationale:</b> {resResult.decision_rationale}
             </div>
 
             {/* Laser Micro-Perforation Specs if Applicable */}
             {resResult.micro_perforation_specs?.is_required && (
-              <div style={{ background: "rgba(54, 191, 250, 0.08)", border: "1px solid rgba(54, 191, 250, 0.3)", borderRadius: "var(--radius-md)", padding: "14px", marginBottom: "16px" }}>
+              <div style={{ background: "rgba(47, 106, 136, 0.08)", border: "1px solid rgba(47, 106, 136, 0.3)", borderRadius: "var(--radius-md)", padding: "14px", marginBottom: "16px" }}>
                 <span className="micro-label cyan" style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "6px" }}>
                   <Sparkles size={11} /> Laser Micro-Perforation Specifications
                 </span>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
                   <div>
                     <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Hole Count:</span>
-                    <b style={{ display: "block", color: "#fff" }}>{resResult.micro_perforation_specs.hole_count} holes</b>
+                    <b style={{ display: "block", color: "var(--color-primary-dark)" }}>{resResult.micro_perforation_specs.hole_count} holes</b>
                   </div>
                   <div>
                     <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Hole Diameter:</span>
-                    <b style={{ display: "block", color: "#fff" }}>{resResult.micro_perforation_specs.hole_diameter_um} µm</b>
+                    <b style={{ display: "block", color: "var(--color-primary-dark)" }}>{resResult.micro_perforation_specs.hole_diameter_um} µm</b>
                   </div>
                   <div>
                     <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Grid Pitch:</span>
-                    <b style={{ display: "block", color: "#fff" }}>{resResult.micro_perforation_specs.hole_pitch_cm} cm</b>
+                    <b style={{ display: "block", color: "var(--color-primary-dark)" }}>{resResult.micro_perforation_specs.hole_pitch_cm} cm</b>
                   </div>
                   <div>
                     <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Single Pore Flux:</span>
-                    <b style={{ display: "block", color: "var(--accent-cyan)" }}>{resResult.micro_perforation_specs.single_hole_flux_cc_day} cc/d</b>
+                    <b style={{ display: "block", color: "var(--color-data-slate)" }}>{resResult.micro_perforation_specs.single_hole_flux_cc_day} cc/d</b>
                   </div>
                 </div>
               </div>
@@ -549,7 +549,7 @@ function MAPOptimizerTab({ initialInput }) {
       <div className="glass-card" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
         <div>
           <span className="micro-label green">MAP Configuration</span>
-          <h3 style={{ fontSize: "17px", color: "#fff", margin: "2px 0 0" }}>Headspace & Film Parameters</h3>
+          <h3 style={{ fontSize: "17px", color: "var(--color-primary-dark)", margin: "2px 0 0" }}>Headspace & Film Parameters</h3>
         </div>
 
         <div className="field">
@@ -623,7 +623,7 @@ function MAPOptimizerTab({ initialInput }) {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
               <div>
                 <span className="micro-label green">OPTIMIZED GAS BLEND</span>
-                <h3 style={{ fontSize: "22px", color: "#fff", margin: "4px 0" }}>{mapResult.gas_mixture_label}</h3>
+                <h3 style={{ fontSize: "22px", color: "var(--color-primary-dark)", margin: "4px 0" }}>{mapResult.gas_mixture_label}</h3>
                 <small style={{ color: "var(--text-secondary)" }}>
                   Package Headspace Volume: <b>{mapResult.headspace_volume_cc} cc</b>
                 </small>
@@ -687,13 +687,13 @@ function MAPOptimizerTab({ initialInput }) {
                 </div>
                 <div>
                   <span style={{ fontSize: "11px", color: "var(--text-muted)", display: "block" }}>Respiratory Quotient (RQ)</span>
-                  <b style={{ color: "#fff", fontSize: "14px" }}>{mapResult.respiratory_quotient || 0.95}</b>
+                  <b style={{ color: "var(--color-primary-dark)", fontSize: "14px" }}>{mapResult.respiratory_quotient || 0.95}</b>
                 </div>
               </div>
             )}
 
             {/* Chemical & Biological Mechanism */}
-            <div style={{ padding: "14px 16px", background: "var(--bg-input)", borderRadius: "var(--radius-md)", borderLeft: "3px solid var(--accent-green)" }}>
+            <div style={{ padding: "14px 16px", background: "var(--color-bg-base)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)", borderLeft: "3px solid var(--color-muted-green)" }}>
               <span className="micro-label green" style={{ display: "block", marginBottom: "4px" }}>PRESERVATION MECHANISM</span>
               <p style={{ margin: 0, fontSize: "12.5px", color: "var(--text-secondary)", lineHeight: "1.6" }}>
                 {mapResult.preservation_mechanism}
@@ -775,9 +775,9 @@ function MultiConditionSweepTab({ initialInput }) {
       <div className="glass-card" style={{ padding: "20px 24px", marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
         <div>
           <span className="micro-label green">Arrhenius Kinetic Sensitivity Analysis</span>
-          <h3 style={{ fontSize: "18px", color: "#fff", margin: "2px 0 0" }}>Multi-Condition Scenario Sweep</h3>
+          <h3 style={{ fontSize: "18px", color: "var(--color-primary-dark)", margin: "2px 0 0" }}>Multi-Condition Scenario Sweep</h3>
           <p style={{ fontSize: "12.5px", color: "var(--text-secondary)", margin: "2px 0 0" }}>
-            Simulates permeation stringency and material shifts across a -5°C to 45°C thermal range and 30 to 365-day horizons via <code style={{ color: "var(--accent-cyan)", fontFamily: "var(--font-mono)" }}>POST /api/simulate</code>.
+            Simulates permeation stringency and material shifts across a -5°C to 45°C thermal range and 30 to 365-day horizons via <code style={{ color: "var(--color-data-slate)", fontFamily: "var(--font-mono)" }}>POST /api/simulate</code>.
           </p>
         </div>
 
@@ -785,7 +785,7 @@ function MultiConditionSweepTab({ initialInput }) {
           <select
             value={food}
             onChange={e => setFood(e.target.value)}
-            style={{ background: "var(--bg-input)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-sm)", color: "#fff", padding: "8px 12px", fontSize: "13px" }}
+            style={{ background: "#FFFFFF", border: "1px solid var(--border-color)", borderRadius: "var(--radius-sm)", color: "var(--color-primary-dark)", padding: "8px 12px", fontSize: "13px" }}
           >
             {Object.entries(FOODS).map(([k, f]) => (
               <option key={k} value={k}>{f.name} ({f.category})</option>
@@ -810,20 +810,20 @@ function MultiConditionSweepTab({ initialInput }) {
           {/* Temperature Sensitivity Chart Card */}
           <div className="glass-card" style={{ padding: "24px" }}>
             <span className="micro-label cyan">THERMAL ACCELERATION CURVE</span>
-            <h4 style={{ fontSize: "16px", color: "#fff", margin: "2px 0 16px" }}>
+            <h4 style={{ fontSize: "16px", color: "var(--color-primary-dark)", margin: "2px 0 16px" }}>
               Max Allowable OTR vs Storage Temperature (°C)
             </h4>
 
             <div style={{ width: "100%", height: "260px" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={tempChartData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="name" stroke="#6C7D77" fontSize={11} />
-                  <YAxis stroke="#6C7D77" fontSize={11} />
-                  <Tooltip contentStyle={{ background: "#0c1f1a", border: "1px solid #1c3d34", borderRadius: "8px", fontSize: "12px" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                  <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={11} />
+                  <YAxis stroke="var(--text-secondary)" fontSize={11} />
+                  <Tooltip contentStyle={{ background: "#FFFFFF", border: "1px solid var(--border-color)", borderRadius: "8px", fontSize: "12px", color: "var(--color-primary-dark)" }} />
                   <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
-                  <Bar dataKey="targetOtr" name="Target OTR Max (cc/m²·d)" fill="#36BFFA" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="actualOtr" name="Recommended Film OTR (cc/m²·d)" fill="#32D583" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="targetOtr" name="Target OTR Max (cc/m²·d)" fill="#2F6A88" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="actualOtr" name="Recommended Film OTR (cc/m²·d)" fill="#3F7658" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -835,7 +835,7 @@ function MultiConditionSweepTab({ initialInput }) {
           {/* Shelf Life Feasibility Grid */}
           <div className="glass-card" style={{ padding: "24px" }}>
             <span className="micro-label green">TIME-HORIZON FEASIBILITY MATRIX</span>
-            <h4 style={{ fontSize: "16px", color: "#fff", margin: "2px 0 16px" }}>
+            <h4 style={{ fontSize: "16px", color: "var(--color-primary-dark)", margin: "2px 0 16px" }}>
               Optimal Material & Thickness Required per Shelf-Life Target
             </h4>
 
@@ -844,8 +844,8 @@ function MultiConditionSweepTab({ initialInput }) {
                 <div
                   key={step.shelf_life_days}
                   style={{
-                    background: "var(--bg-input)",
-                    border: "1px solid var(--border-subtle)",
+                    background: "var(--color-bg-base)",
+                    border: "1px solid var(--border-color)",
                     borderRadius: "var(--radius-md)",
                     padding: "14px",
                     display: "flex",
@@ -854,14 +854,14 @@ function MultiConditionSweepTab({ initialInput }) {
                   }}
                 >
                   <span className="micro-label">{step.shelf_life_days} DAYS TARGET</span>
-                  <b style={{ color: "var(--accent-green)", fontSize: "15px" }}>{step.recommended_material}</b>
+                  <b style={{ color: "var(--color-muted-green)", fontSize: "15px" }}>{step.recommended_material}</b>
                   <small style={{ color: "var(--text-secondary)", fontSize: "11px" }}>
                     Thickness: <b>{step.optimal_thickness_um} µm</b>
                   </small>
                   <small style={{ color: "var(--text-muted)", fontSize: "11px" }}>
                     OTR Max: {step.required_otr_max} cc
                   </small>
-                  <span style={{ fontSize: "10px", color: step.overall_status === "PASS" ? "var(--accent-green)" : "var(--accent-red)", fontWeight: 700, marginTop: "4px" }}>
+                  <span style={{ fontSize: "10px", color: step.overall_status === "PASS" ? "var(--color-muted-green)" : "var(--color-risk-red)", fontWeight: 700, marginTop: "4px" }}>
                     ✓ {step.overall_status}
                   </span>
                 </div>
@@ -869,10 +869,10 @@ function MultiConditionSweepTab({ initialInput }) {
             </div>
           </div>
 
-          {/* AI Summary Banner */}
-          <div style={{ background: "rgba(50, 213, 131, 0.08)", border: "1px solid rgba(50, 213, 131, 0.25)", borderRadius: "var(--radius-md)", padding: "16px 20px" }}>
-            <span className="micro-label green" style={{ display: "block", marginBottom: "4px" }}>AI SIMULATION SUMMARY</span>
-            <p style={{ margin: 0, fontSize: "13px", color: "#d9eae3", lineHeight: "1.6" }}>
+          {/* Engineering Summary Banner */}
+          <div style={{ background: "rgba(63, 118, 88, 0.08)", border: "1px solid rgba(63, 118, 88, 0.25)", borderRadius: "var(--radius-md)", padding: "16px 20px" }}>
+            <span className="micro-label green" style={{ display: "block", marginBottom: "4px" }}>ENGINEERING SIMULATION SUMMARY</span>
+            <p style={{ margin: 0, fontSize: "13px", color: "var(--color-primary-dark)", lineHeight: "1.6" }}>
               {sweepResult.summary}
             </p>
           </div>

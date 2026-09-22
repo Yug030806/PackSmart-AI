@@ -131,7 +131,7 @@ export function MaterialsCompare() {
                   padding: "7px 14px",
                   borderRadius: "var(--radius-full)",
                   background: isSel ? "var(--accent-green)" : "var(--bg-input)",
-                  color: isSel ? "#051410" : "var(--text-secondary)",
+                  color: isSel ? "#FFFFFF" : "var(--text-secondary)",
                   border: isSel ? "1px solid var(--accent-green)" : "1px solid var(--border-subtle)"
                 }}
                 onClick={() => toggleSelect(m.id)}
@@ -153,14 +153,14 @@ export function MaterialsCompare() {
               </th>
               {selectedMaterials.map(m => (
                 <th key={m.id} style={{ padding: "14px 16px", textAlign: "left" }}>
-                  <b style={{ color: "#fff", fontSize: "15px", display: "block" }}>{m.short}</b>
+                  <b style={{ color: "var(--color-primary-dark)", fontSize: "15px", display: "block" }}>{m.short}</b>
                   <small style={{ color: "var(--text-muted)", fontSize: "11px", fontWeight: 400 }}>{m.category}</small>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+            <tr style={{ borderBottom: "1px solid var(--border-subtle)" }}>
               <td style={{ padding: "14px 16px", color: "var(--text-secondary)" }}>
                 <b>Nominal OTR</b>
                 <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>Oxygen Flux · cc/(m²·day·atm)</div>
@@ -192,7 +192,7 @@ export function MaterialsCompare() {
                 <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>Recommended commercial thickness</div>
               </td>
               {selectedMaterials.map(m => (
-                <td key={m.id} style={{ padding: "14px 16px", color: "#fff" }}>
+                <td key={m.id} style={{ padding: "14px 16px", color: "var(--color-primary-dark)", fontWeight: 600 }}>
                   {m.thickness}
                 </td>
               ))}
@@ -205,19 +205,19 @@ export function MaterialsCompare() {
               </td>
               {selectedMaterials.map(m => (
                 <td key={m.id} style={{ padding: "14px 16px" }}>
-                  <b style={{ color: m.carbon <= 2.0 ? "var(--accent-green)" : "#fff" }}>{m.carbon}</b>
+                  <b style={{ color: m.carbon <= 2.0 ? "var(--accent-green)" : "var(--color-primary-dark)" }}>{m.carbon}</b>
                   <small style={{ color: "var(--text-muted)", marginLeft: "4px" }}>kg CO₂e</small>
                 </td>
               ))}
             </tr>
 
-            <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+            <tr style={{ borderBottom: "1px solid var(--border-subtle)" }}>
               <td style={{ padding: "14px 16px", color: "var(--text-secondary)" }}>
                 <b>Recyclability Class</b>
                 <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>Post-consumer circular stream</div>
               </td>
               {selectedMaterials.map(m => (
-                <td key={m.id} style={{ padding: "14px 16px", fontSize: "12.5px", color: "#d9eae3" }}>
+                <td key={m.id} style={{ padding: "14px 16px", fontSize: "12.5px", color: "var(--text-secondary)" }}>
                   {m.recyclability}
                 </td>
               ))}
@@ -238,13 +238,13 @@ export function MaterialsCompare() {
       </div>
 
       {/* Live Barrier Analysis Card (Calls /api/calculate-barrier) */}
-      <div className="glass-card" style={{ padding: "26px", marginBottom: "32px", border: "1px solid rgba(50, 213, 131, 0.3)" }}>
+      <div className="glass-card" style={{ padding: "26px", marginBottom: "32px", border: "1px solid var(--border-card)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
           <div>
-            <div className="micro-label green" style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+            <div className="spec-tag green" style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
               <ShieldCheck size={13} /> Live Permeation & Barrier Validator
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 700, margin: 0, color: "#fff" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: 700, margin: 0, color: "var(--color-primary-dark)" }}>
               Real-Time Barrier Thresholds & Material Suitability Matrix
             </h2>
             <p style={{ fontSize: "13px", color: "var(--text-secondary)", margin: "4px 0 0" }}>
@@ -265,13 +265,13 @@ export function MaterialsCompare() {
         </div>
 
         {/* Input Parameters Controls */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", padding: "16px", background: "var(--bg-input)", borderRadius: "var(--radius-md)", marginBottom: "22px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", padding: "16px", background: "var(--bg-subtle)", borderRadius: "var(--radius-md)", marginBottom: "22px", border: "1px solid var(--border-subtle)" }}>
           <div className="field" style={{ margin: 0 }}>
             <label style={{ fontSize: "11px", textTransform: "uppercase", color: "var(--text-muted)", display: "block", marginBottom: "6px" }}>Food Preset</label>
             <select
               value={barrierFood}
               onChange={e => setBarrierFood(e.target.value)}
-              style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-sm)", color: "#fff", padding: "8px 10px", fontSize: "13px" }}
+              style={{ width: "100%", background: "#FFFFFF", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-sm)", color: "var(--text-primary)", padding: "8px 10px", fontSize: "13px" }}
             >
               {Object.entries(FOODS).map(([k, f]) => (
                 <option key={k} value={k}>{f.name} ({f.category})</option>
@@ -324,9 +324,9 @@ export function MaterialsCompare() {
                 <small style={{ fontSize: "11px", color: "var(--text-muted)" }}>Moisture vapor flux limit (WVTR)</small>
               </div>
 
-              <div style={{ background: "rgba(245, 185, 66, 0.08)", border: "1px solid rgba(245, 185, 66, 0.25)", borderRadius: "var(--radius-md)", padding: "14px" }}>
-                <span className="micro-label" style={{ color: "var(--warning-amber)" }}>PRIMARY FAILURE RISKS</span>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: "#fff", margin: "4px 0" }}>
+              <div style={{ background: "rgba(213, 154, 56, 0.1)", border: "1px solid rgba(213, 154, 56, 0.3)", borderRadius: "var(--radius-md)", padding: "14px" }}>
+                <span className="micro-label" style={{ color: "var(--color-warning-amber)" }}>PRIMARY FAILURE RISKS</span>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--color-primary-dark)", margin: "4px 0" }}>
                   {barrierCheckResult.required_barrier?.limiting_barrier_factor || "Moisture / Oxidation"}
                 </div>
                 <small style={{ fontSize: "11px", color: "var(--text-secondary)", display: "block" }}>
@@ -342,7 +342,7 @@ export function MaterialsCompare() {
               </span>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12.5px" }}>
                 <thead>
-                  <tr style={{ borderBottom: "1px solid var(--border-subtle)", textAlign: "left" }}>
+                  <tr style={{ borderBottom: "1px solid var(--border-color)", textAlign: "left" }}>
                     <th style={{ padding: "10px 12px" }}>Material Structure</th>
                     <th style={{ padding: "10px 12px" }}>Actual OTR</th>
                     <th style={{ padding: "10px 12px" }}>Actual WVTR</th>
@@ -355,8 +355,8 @@ export function MaterialsCompare() {
                   {barrierCheckResult.materials_barrier_check?.map(c => {
                     const isPass = c.overall_barrier_status === "PASS";
                     return (
-                      <tr key={c.material_id} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                        <td style={{ padding: "10px 12px", fontWeight: 600, color: "#fff" }}>
+                      <tr key={c.material_id} style={{ borderBottom: "1px solid var(--border-color)" }}>
+                        <td style={{ padding: "10px 12px", fontWeight: 600, color: "var(--color-primary-dark)" }}>
                           {c.material_name || c.material_id}
                         </td>
                         <td style={{ padding: "10px 12px", fontFamily: "var(--font-mono)", color: "var(--text-secondary)" }}>
